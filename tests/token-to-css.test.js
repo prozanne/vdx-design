@@ -92,3 +92,18 @@ test("compareKeys is antisymmetric across the same input pair", () => {
     assert.equal(Math.sign(ab), -Math.sign(ba), `compareKeys(${a},${b})=${ab} but compareKeys(${b},${a})=${ba}`);
   }
 });
+
+test("themeToCss kebab-cases camelCase top-level group keys", () => {
+  // Without this, a group named e.g. `zIndex` or `motionTokens` would emit
+  // `--vdx-zIndex-*` instead of the expected `--vdx-z-index-*`. The fix is in
+  // lib/token-to-css.js where the outer flatten() call runs camelToKebab on
+  // the group name. Pin it here so a regression is caught even if zIndex is
+  // later renamed away.
+  const t = makeTheme(["0", "1", "2"]);
+  // Inject a synthetic camelCase group. themeToCss derives the group set from
+  // theme keys, so this is a fair test of the kebab path.
+  t.fooBarBaz = { qux: "1px" };
+  const css = themeToCss(t);
+  assert.match(css, /--vdx-foo-bar-baz-qux:\s*1px/);
+  assert.equal(/--vdx-fooBarBaz/.test(css), false, "expected camelCase group to NOT appear verbatim");
+});

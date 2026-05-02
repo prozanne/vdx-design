@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<!-- decision: hero-style = A via vdx-decide (2026-05-03) -->
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Galaxy Z Flip6 — 신상품</title>
+  <link rel="stylesheet" href="../tokens.css">
+  <link rel="stylesheet" href="../components.css">
+</head>
+<body>
+  <header>
+    <nav class="nav-bar" aria-label="주요 메뉴">
+      <a href="#" class="brand">SAMSUNG</a>
+      <ul>
+        <li><a href="#">스마트폰</a></li>
+        <li><a href="#">웨어러블</a></li>
+        <li><a href="#">매장 찾기</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section style="
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: var(--vdx-spacing-12) var(--vdx-spacing-6);
+      gap: var(--vdx-spacing-4);
+      background: var(--vdx-colors-surface-elevated);
+    ">
+      <p style="
+        margin: 0;
+        font-size: var(--vdx-typography-font-size-caption);
+        letter-spacing: var(--vdx-typography-letter-spacing-wide);
+        text-transform: uppercase;
+        color: var(--vdx-colors-text-muted);
+      ">신상품</p>
+      <h1 style="
+        margin: 0;
+        font-size: var(--vdx-typography-font-size-display-l);
+        font-weight: var(--vdx-typography-font-weight-bold);
+        letter-spacing: var(--vdx-typography-letter-spacing-tight);
+        line-height: var(--vdx-typography-line-height-tight);
+      ">접고 펴는<br>새로운 일상</h1>
+      <p style="
+        margin: 0;
+        max-width: var(--vdx-layout-narrow);
+        font-size: var(--vdx-typography-font-size-body-l);
+        color: var(--vdx-colors-text-secondary);
+        line-height: var(--vdx-typography-line-height-relaxed);
+      ">Galaxy Z Flip6와 함께 더 가볍고, 더 자유로운 매일을 경험해보세요.</p>
+      <div style="display: flex; gap: var(--vdx-spacing-3); margin-top: var(--vdx-spacing-2);">
+        <a href="#" class="btn btn-primary">지금 구매하기</a>
+        <a href="#" class="btn btn-ghost">자세히 보기</a>
+      </div>
+    </section>
+
+    <section class="container-wide" style="padding-block: var(--vdx-spacing-10);">
+      <h2 style="
+        margin: 0 0 var(--vdx-spacing-6);
+        font-size: var(--vdx-typography-font-size-h2);
+        text-align: center;
+      ">함께 보면 좋은 제품</h2>
+      <div class="grid-3">
+        <article class="product-card">
+          <div class="image" aria-hidden="true"></div>
+          <div class="body">
+            <p class="name">Galaxy Buds3 Pro</p>
+            <p class="price">329,000원</p>
+          </div>
+        </article>
+        <article class="product-card">
+          <div class="image" aria-hidden="true"></div>
+          <div class="body">
+            <p class="name">Galaxy Watch7</p>
+            <p class="price">399,000원</p>
+          </div>
+        </article>
+        <article class="product-card">
+          <div class="image" aria-hidden="true"></div>
+          <div class="body">
+            <p class="name">Galaxy Tab S10</p>
+            <p class="price">1,299,000원</p>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <small>© Samsung Electronics Co., Ltd.</small>
+  </footer>
+</body>
+</html>

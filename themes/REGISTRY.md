@@ -2,9 +2,10 @@
 
 Authoritative list of themes shipped with `vdx-design`. Each row points to a directory under `themes/`. The directory name MUST equal the theme `id`.
 
-| ID           | Name           | Version | Inspiration                | Status |
-| ------------ | -------------- | ------- | -------------------------- | ------ |
-| `samsung-kr` | Samsung Korea  | 1.0.0   | https://www.samsung.com/sec/ | active |
+| ID                | Name              | Version | Inspiration                                          | Status |
+| ----------------- | ----------------- | ------- | ---------------------------------------------------- | ------ |
+| `samsung-kr`      | Samsung Korea     | 1.0.0   | https://www.samsung.com/sec/                         | active |
+| `samsung-bespoke` | Samsung Bespoke   | 1.0.0   | Samsung Bespoke home appliances — pastel, warm wood  | active |
 
 ## Adding a theme
 

@@ -97,6 +97,23 @@ Use a real `alt` describing the product (the bare product name is fine — the s
 
 The nav is sticky by default. Place it as the very first child of `<body>`. Always set `aria-label` on the `<nav>` (a screen reader hears every nav as "navigation" otherwise) and on the wordmark link, since the only accessible name otherwise is the literal string "SAMSUNG".
 
+### Mobile drawer
+
+Below the tablet breakpoint, `.nav-links` is hidden. Use the `.nav-drawer` skeleton (a native `<details>`/`<summary>` pair) for the mobile menu — works without JS, accessible by default, opens an inline-flow panel below the bar:
+
+```html
+<details class="nav-drawer">
+  <summary aria-label="메뉴">≡</summary>
+  <ul>
+    <li><a href="#">스마트폰</a></li>
+    <li><a href="#">TV/AV</a></li>
+    <li><a href="#">생활가전</a></li>
+  </ul>
+</details>
+```
+
+Place it before `.nav-links` in the markup so the bar reads "brand → drawer → links → actions" in source order. Consumers can swap `<details>` for a JS-driven drawer if they want richer animation; the CSS above only styles the native primitive.
+
 ## Footer
 
 ```html

@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Form Inputs Playground · samsung-kr</title>
+  <link rel="stylesheet" href="../tokens.css" />
+  <link rel="stylesheet" href="../components.css" />
+  <style>
+    /* ---------- Playground chrome ----------
+     * All values reference --vdx-* tokens. No literal hex/rgb/px allowed.
+     */
+    body {
+      background: var(--vdx-colors-surface-elevated);
+      min-height: 100vh;
+    }
+
+    .pg-shell {
+      max-width: var(--vdx-layout-content);
+      margin: 0 auto;
+      padding-inline: var(--vdx-spacing-6);
+      padding-block: var(--vdx-spacing-12);
+    }
+
+    .pg-header { margin-bottom: var(--vdx-spacing-8); }
+    .pg-header h1 {
+      font-size: var(--vdx-typography-font-size-h2);
+      margin-bottom: var(--vdx-spacing-2);
+    }
+    .pg-header p {
+      color: var(--vdx-colors-text-secondary);
+      font-size: var(--vdx-typography-font-size-body-m);
+      margin: 0;
+    }
+
+    .pg-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 320px) minmax(0, 1fr);
+      gap: var(--vdx-spacing-8);
+      align-items: start;
+    }
+
+    /* ---------- Control panel ---------- */
+    .pg-panel {
+      background: var(--vdx-colors-surface-card);
+      border: 1px solid var(--vdx-colors-border-subtle);
+      border-radius: var(--vdx-radius-md);
+      padding: var(--vdx-spacing-6);
+      box-shadow: var(--vdx-shadow-sm);
+      position: sticky;
+      top: var(--vdx-spacing-6);
+    }
+    .pg-panel > * + * { margin-top: var(--vdx-spacing-6); }
+
+    .pg-fieldset { border: none; padding: 0; margin: 0; }
+
+    .pg-legend {
+      display: block;
+      font-size: var(--vdx-typography-font-size-body-s);
+      font-weight: var(--vdx-typography-font-weight-semibold);
+      letter-spacing: var(--vdx-typography-letter-spacing-wide);
+      text-transform: uppercase;
+      color: var(--vdx-colors-text-secondary);
+      margin-bottom: var(--vdx-spacing-3);
+      padding: 0;
+    }
+
+    .pg-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--vdx-spacing-2);
+    }
+
+    .pg-option { position: relative; display: inline-flex; }
+
+    .pg-option input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      cursor: pointer;
+    }
+
+    .pg-option .pg-chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding-inline: var(--vdx-spacing-4);
+      padding-block: var(--vdx-spacing-2);
+      border: 1px solid var(--vdx-colors-border-default);
+      border-radius: var(--vdx-radius-pill);
+      background: var(--vdx-colors-surface-card);
+      color: var(--vdx-colors-text-secondary);
+      font-size: var(--vdx-typography-font-size-body-s);
+      font-weight: var(--vdx-typography-font-weight-medium);
+      cursor: pointer;
+      transition:
+        background var(--vdx-motion-duration-fast) var(--vdx-motion-easing-standard),
+        color var(--vdx-motion-duration-fast) var(--vdx-motion-easing-standard),
+        border-color var(--vdx-motion-duration-fast) var(--vdx-motion-easing-standard);
+      user-select: none;
+    }
+
+    .pg-option input[type="radio"]:checked + .pg-chip {
+      background: var(--vdx-colors-brand-primary);
+      color: var(--vdx-colors-text-on-brand);
+      border-color: var(--vdx-colors-brand-primary);
+    }
+
+    .pg-option input[type="radio"]:focus-visible + .pg-chip {
+      outline: 2px solid var(--vdx-colors-brand-accent);
+      outline-offset: 2px;
+    }
+
+    /* ---------- Stage ---------- */
+    .pg-stage {
+      background: var(--vdx-colors-surface-card);
+      border: 1px solid var(--vdx-colors-border-subtle);
+      border-radius: var(--vdx-radius-md);
+      box-shadow: var(--vdx-shadow-sm);
+      overflow: hidden;
+      transition:
+        background var(--vdx-motion-duration-base) var(--vdx-motion-easing-standard),
+        color var(--vdx-motion-duration-base) var(--vdx-motion-easing-standard);
+    }
+
+    .pg-stage-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--vdx-spacing-4);
+      padding-inline: var(--vdx-spacing-6);
+      padding-block: var(--vdx-spacing-3);
+      border-bottom: 1px solid var(--vdx-colors-border-subtle);
+      background: var(--vdx-colors-surface-elevated);
+    }
+
+    .pg-stage-title {
+      font-size: var(--vdx-typography-font-size-body-s);
+      font-weight: var(--vdx-typography-font-weight-semibold);
+      letter-spacing: var(--vdx-typography-letter-spacing-wide);
+      text-transform: uppercase;
+      color: var(--vdx-colors-text-secondary);
+    }
+
+    .pg-stage-canvas {
+      padding: var(--vdx-spacing-8);
+      background:
+        repeating-linear-gradient(
+          45deg,
+          var(--vdx-colors-surface-card) 0,
+          var(--vdx-colors-surface-card) var(--vdx-spacing-3),
+          var(--vdx-colors-surface-elevated) var(--vdx-spacing-3),
+          var(--vdx-colors-surface-elevated) var(--vdx-spacing-6)
+        );
+      transition: background var(--vdx-motion-duration-base) var(--vdx-motion-easing-standard);
+    }
+
+    /* Dark mode applied to the stage region only */
+    .pg-stage[data-mode="dark"] {
+      background: var(--vdx-colors-surface-inverse);
+      color: var(--vdx-colors-text-on-inverse);
+    }
+    .pg-stage[data-mode="dark"] .pg-stage-head {
+      background: var(--vdx-colors-surface-inverse);
+      color: var(--vdx-colors-text-on-inverse);
+      border-bottom-color: var(--vdx-colors-border-inverse);
+    }
+    .pg-stage[data-mode="dark"] .pg-stage-title {
+      color: var(--vdx-colors-text-on-inverse-secondary);
+    }
+    .pg-stage[data-mode="dark"] .pg-stage-canvas {
+      background:
+        repeating-linear-gradient(
+          45deg,
+          var(--vdx-colors-surface-inverse) 0,
+          var(--vdx-colors-surface-inverse) var(--vdx-spacing-3),
+          var(--vdx-colors-neutral-900) var(--vdx-spacing-3),
+          var(--vdx-colors-neutral-900) var(--vdx-spacing-6)
+        );
+    }
+
+    /* ---------- State matrix grid ---------- */
+    .pg-matrix {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: var(--vdx-spacing-6);
+    }
+
+    .pg-cell {
+      display: flex;
+      flex-direction: column;
+      gap: var(--vdx-spacing-2);
+      padding: var(--vdx-spacing-4);
+      background: var(--vdx-colors-surface-card);
+      border: 1px solid var(--vdx-colors-border-subtle);
+      border-radius: var(--vdx-radius-sm);
+      transition:
+        background var(--vdx-motion-duration-base) var(--vdx-motion-easing-standard),
+        border-color var(--vdx-motion-duration-base) var(--vdx-motion-easing-standard);
+    }
+    .pg-stage[data-mode="dark"] .pg-cell {
+      background: var(--vdx-colors-neutral-900);
+      border-color: var(--vdx-colors-border-inverse);
+    }
+
+    .pg-cell-label {
+      font-size: var(--vdx-typography-font-size-caption);
+      font-weight: var(--vdx-typography-font-weight-semibold);
+      letter-spacing: var(--vdx-typography-letter-spacing-wide);
+      text-transform: uppercase;
+      color: var(--vdx-colors-text-muted);
+    }
+    .pg-stage[data-mode="dark"] .pg-cell-label {
+      color: var(--vdx-colors-text-on-inverse-secondary);
+    }
+
+    .pg-cell-control {
+      display: flex;
+      flex-direction: column;
+      gap: var(--vdx-spacing-2);
+    }
+
+    /* ---------- Sized text-input variants (faked: no .input--sm/lg in components.css) ---------- */
+    .pg-input--sm {
+      height: var(--vdx-spacing-8);
+      padding-inline: var(--vdx-spacing-3);
+      font-size: var(--vdx-typography-font-size-body-s);
+    }
+    .pg-input--lg {
+      height: var(--vdx-spacing-16);
+      padding-inline: var(--vdx-spacing-5);
+      font-size: var(--vdx-typography-font-size-body-l);
+    }
+
+    /* ---------- Faked semantic input states (no .input--error / --success in components.css) ---------- */
+    .pg-input--error {
+      border-color: var(--vdx-colors-semantic-danger);
+    }
+    .pg-input--error:focus,
+    .pg-input--error:focus-visible {
+      border-color: var(--vdx-colors-semantic-danger);
+      outline-color: var(--vdx-colors-semantic-danger);
+    }
+    .pg-input--success {
+      border-color: var(--vdx-colors-semantic-success);
+    }
+    .pg-input--success:focus,
+    .pg-input--success:focus-visible {
+      border-color: var(--vdx-colors-semantic-success);
+      outline-color: var(--vdx-colors-semantic-success);
+    }
+
+    /* simulated hover/focus visuals (since real :hover/:focus require pointer/keyboard) */
+    .pg-input--hover {
+      border-color: var(--vdx-colors-text-secondary);
+    }
+    .pg-input--focus {
+      border-color: var(--vdx-colors-brand-primary);
+      outline: 2px solid var(--vdx-colors-brand-accent);
+      outline-offset: 2px;
+    }
+
+    .pg-input:disabled {
+      background: var(--vdx-colors-neutral-100);
+      color: var(--vdx-colors-text-muted);
+      cursor: not-allowed;
+    }
+    .pg-stage[data-mode="dark"] .pg-input {
+      background: var(--vdx-colors-neutral-900);
+      color: var(--vdx-colors-text-on-inverse);
+      border-color: var(--vdx-colors-border-inverse);
+    }
+    .pg-stage[data-mode="dark"] .pg-input:disabled {
+      background: var(--vdx-colors-neutral-700);
+      color: var(--vdx-colors-text-on-inverse-secondary);
+    }
+
+    /* ---------- Inline error / success messages ---------- */
+    .pg-msg {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--vdx-spacing-1);
+      font-size: var(--vdx-typography-font-size-body-s);
+      font-weight: var(--vdx-typography-font-weight-medium);
+    }
+    .pg-msg--error { color: var(--vdx-colors-semantic-danger); }
+    .pg-msg--success { color: var(--vdx-colors-semantic-success); }
+    .pg-msg::before {
+      content: "";
+      display: inline-block;
+      width: var(--vdx-spacing-2);
+      height: var(--vdx-spacing-2);
+      border-radius: var(--vdx-radius-pill);
+      background: currentColor;
+    }
+
+    /* ---------- Select (faked: no .select class in components.css) ---------- */
+    .pg-select {
+      width: 100%;
+      height: var(--vdx-components-input-height);
+      padding-inline: var(--vdx-components-input-padding-x);
+      padding-right: var(--vdx-spacing-10);
+      border: 1px solid var(--vdx-components-input-border-color);
+      border-radius: var(--vdx-components-input-radius);
+      font-family: inherit;
+      font-size: var(--vdx-typography-font-size-body-m);
+      background: var(--vdx-colors-surface-card);
+      color: var(--vdx-colors-text-primary);
+      appearance: none;
+      -webkit-appearance: none;
+      background-image:
+        linear-gradient(45deg, transparent 50%, currentColor 50%),
+        linear-gradient(-45deg, transparent 50%, currentColor 50%);
+      background-position:
+        right var(--vdx-spacing-5) center,
+        right var(--vdx-spacing-4) center;
+      background-size: var(--vdx-spacing-2) var(--vdx-spacing-2);
+      background-repeat: no-repeat;
+      transition: border-color var(--vdx-motion-duration-fast) var(--vdx-motion-easing-standard);
+    }
+    .pg-select:focus,
+    .pg-select:focus-visible {
+      border-color: var(--vdx-colors-brand-primary);
+      outline: 2px solid var(--vdx-colors-brand-accent);
+      outline-offset: 2px;
+    }
+    .pg-select:disabled {
+      background-color: var(--vdx-colors-neutral-100);
+      color: var(--vdx-colors-text-muted);
+      cursor: not-allowed;
+    }
+    .pg-select--sm {
+      height: var(--vdx-spacing-8);
+      padding-inline: var(--vdx-spacing-3);
+      padding-right: var(--vdx-spacing-10);
+      font-size: var(--vdx-typography-font-size-body-s);
+    }
+    .pg-select--lg {
+      height: var(--vdx-spacing-16);
+      padding-inline: var(--vdx-spacing-5);
+      padding-right: var(--vdx-spacing-12);
+      font-size: var(--vdx-typography-font-size-body-l);
+    }
+    .pg-select--hover { border-color: var(--vdx-colors-text-secondary); }
+    .pg-select--focus {
+      border-color: var(--vdx-colors-brand-primary);
+      outline: 2px solid var(--vdx-colors-brand-accent);
+      outline-offset: 2px;
+    }
+    .pg-select--error { border-color: var(--vdx-colors-semantic-danger); }
+    .pg-stage[data-mode="dark"] .pg-select {
+      background-color: var(--vdx-colors-neutral-900);
+      color: var(--vdx-colors-text-on-inverse);
+      border-color: var(--vdx-colors-border-inverse);
+    }
+    .pg-stage[data-mode="dark"] .pg-select:disabled {
+      background-color: var(--vdx-colors-neutral-700);
+      color: var(--vdx-colors-text-on-inverse-secondary);
+    }
+
+    /* ---------- Checkbox (faked: no .checkbox class in components.css) ---------- */
+    .pg-check {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--vdx-spacing-2);
+      font-size: var(--vdx-typography-font-size-body-m);
+      color: var(--vdx-colors-text-primary);
+      cursor: pointer;
+    }
+    .pg-stage[data-mode="dark"] .pg-check { color: var(--vdx-colors-text-on-inverse); }
+
+    .pg-check input { position: absolute; opacity: 0; pointer-events: none; }
+
+    .pg-check__box {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--vdx-spacing-5);
+      height: var(--vdx-spacing-5);
+      border: 1px solid var(--vdx-colors-border-default);
+      border-radius: var(--vdx-radius-sm);
+      background: var(--vdx-colors-surface-card);
+      transition:
+        background var(--vdx-motion-duration-fast) var(--vdx-motion-easing-standard),
+        border-color var(--vdx-motion-duration-fast) var(--vdx-motion-easing-standard);
+      flex: 0 0 auto;
+      position: relative;
+    }
+    .pg-stage[data-mode="dark"] .pg-check__box {
+      background: var(--vdx-colors-neutral-900);
+      border-color: var(--vdx-colors-border-inverse);
+    }
+
+    .pg-check__box::after {
+      content: "";
+      width: var(--vdx-spacing-3);
+      height: var(--vdx-spacing-2);
+      border-left: 2px solid var(--vdx-colors-text-on-brand);
+      border-bottom: 2px solid var(--vdx-colors-text-on-brand);
+      transform: rotate(-45deg) translate(0, calc(var(--vdx-spacing-1) * -0.5));
+      opacity: 0;
+      transition: opacity var(--vdx-motion-duration-fast) var(--vdx-motion-easing-standard);
+    }
+
+    .pg-check input:checked + .pg-check__box,
+    .pg-check[data-checked="true"] .pg-check__box {
+      background: var(--vdx-colors-brand-primary);
+      border-color: var(--vdx-colors-brand-primary);
+    }
+    .pg-check input:checked + .pg-check__box::after,
+    .pg-check[data-checked="true"] .pg-check__box::after { opacity: 1; }
+
+    .pg-check input:focus-visible + .pg-check__box,
+    .pg-check[data-focus="true"] .pg-check__box {
+      outline: 2px solid var(--vdx-colors-brand-accent);
+      outline-offset: 2px;
+    }
+
+    .pg-check[data-disabled="true"] {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .pg-check[data-error="true"] .pg-check__box {
+      border-color: var(--vdx-colors-semantic-danger);
+    }
+    .pg-check[data-error="true"][data-checked="true"] .pg-check__box {
+      background: var(--vdx-colors-semantic-danger);
+      border-color: var(--vdx-colors-semantic-danger);
+    }
+
+    /* size variants */
+    .pg-check--sm .pg-check__box {
+      width: var(--vdx-spacing-4);
+      height: var(--vdx-spacing-4);
+    }
+    .pg-check--sm .pg-check__box::after {
+      width: var(--vdx-spacing-2);
+      height: var(--vdx-spacing-1);
+    }
+    .pg-check--lg .pg-check__box {
+      width: var(--vdx-spacing-6);
+      height: var(--vdx-spacing-6);
+    }
+    .pg-check--lg .pg-check__box::after {
+      width: var(--vdx-spacing-4);
+      height: var(--vdx-spacing-2);
+    }
+
+    /* ---------- Radio (faked: no .radio class in components.css) ---------- */
+    .pg-radio {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--vdx-spacing-2);
+      font-size: var(--vdx-typography-font-size-body-m);
+      color: var(--vdx-colors-text-primary);
+      cursor: pointer;
+    }
+    .pg-stage[data-mode="dark"] .pg-radio { color: var(--vdx-colors-text-on-inverse); }
+    .pg-radio input { position: absolute; opacity: 0; pointer-events: none; }
+    .pg-radio__dot {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--vdx-spacing-5);
+      height: var(--vdx-spacing-5);
+      border: 1px solid var(--vdx-colors-border-default);
+      border-radius: var(--vdx-radius-pill);
+      background: var(--vdx-colors-surface-card);
+      transition:
+        background var(--vdx-motion-duration-fast) var(--vdx-motion-easing-standard),
+        border-color var(--vdx-motion-duration-fast) var(--vdx-motion-easing-standard);
+      flex: 0 0 auto;
+    }
+    .pg-stage[data-mode="dark"] .pg-radio__dot {
+      background: var(--vdx-colors-neutral-900);
+      border-color: var(--vdx-colors-border-inverse);
+    }
+    .pg-radio__dot::after {
+      content: "";
+      width: var(--vdx-spacing-2);
+      height: var(--vdx-spacing-2);
+      border-radius: var(--vdx-radius-pill);
+      background: var(--vdx-colors-text-on-brand);
+      opacity: 0;
+      transition: opacity var(--vdx-motion-duration-fast) var(--vdx-motion-easing-standard);
+    }
+    .pg-radio input:checked + .pg-radio__dot,
+    .pg-radio[data-checked="true"] .pg-radio__dot {
+      background: var(--vdx-colors-brand-primary);
+      border-color: var(--vdx-colors-brand-primary);
+    }
+    .pg-radio input:checked + .pg-radio__dot::after,
+    .pg-radio[data-checked="true"] .pg-radio__dot::after { opacity: 1; }
+
+    .pg-radio input:focus-visible + .pg-radio__dot,
+    .pg-radio[data-focus="true"] .pg-radio__dot {
+      outline: 2px solid var(--vdx-colors-brand-accent);
+      outline-offset: 2px;
+    }
+    .pg-radio[data-disabled="true"] { opacity: 0.5; cursor: not-allowed; }
+    .pg-radio[data-error="true"] .pg-radio__dot {
+      border-color: var(--vdx-colors-semantic-danger);
+    }
+    .pg-radio[data-error="true"][data-checked="true"] .pg-radio__dot {
+      background: var(--vdx-colors-semantic-danger);
+      border-color: var(--vdx-colors-semantic-danger);
+    }
+
+    .pg-radio--sm .pg-radio__dot {
+      width: var(--vdx-spacing-4);
+      height: var(--vdx-spacing-4);
+    }
+    .pg-radio--sm .pg-radio__dot::after {
+      width: var(--vdx-spacing-1);
+      height: var(--vdx-spacing-1);
+    }
+    .pg-radio--lg .pg-radio__dot {
+      width: var(--vdx-spacing-6);
+      height: var(--vdx-spacing-6);
+    }
+    .pg-radio--lg .pg-radio__dot::after {
+      width: var(--vdx-spacing-3);
+      height: var(--vdx-spacing-3);
+    }
+
+    /* ---------- Toggle / switch (faked: no .toggle class in components.css) ---------- */
+    .pg-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--vdx-spacing-3);
+      font-size: var(--vdx-typography-font-size-body-m);
+      color: var(--vdx-colors-text-primary);
+      cursor: pointer;
+    }
+    .pg-stage[data-mode="dark"] .pg-toggle { color: var(--vdx-colors-text-on-inverse); }
+    .pg-toggle input { position: absolute; opacity: 0; pointer-events: none; }
+
+    .pg-toggle__track {
+      position: relative;
+      display: inline-block;
+      width: var(--vdx-spacing-10);
+      height: var(--vdx-spacing-6);
+      background: var(--vdx-colors-neutral-300);
+      border-radius: var(--vdx-radius-pill);
+      transition: background var(--vdx-motion-duration-fast) var(--vdx-motion-easing-standard);
+      flex: 0 0 auto;
+    }
+    .pg-stage[data-mode="dark"] .pg-toggle__track {
+      background: var(--vdx-colors-neutral-700);
+    }
+    .pg-toggle__track::after {
+      content: "";
+      position: absolute;
+      top: var(--vdx-spacing-1);
+      left: var(--vdx-spacing-1);
+      width: var(--vdx-spacing-4);
+      height: var(--vdx-spacing-4);
+      background: var(--vdx-colors-surface-card);
+      border-radius: var(--vdx-radius-pill);
+      box-shadow: var(--vdx-shadow-sm);
+      transition:
+        left var(--vdx-motion-duration-fast) var(--vdx-motion-easing-standard),
+        background var(--vdx-motion-duration-fast) var(--vdx-motion-easing-standard);
+    }
+    .pg-toggle input:checked + .pg-toggle__track,
+    .pg-toggle[data-checked="true"] .pg-toggle__track {
+      background: var(--vdx-colors-brand-primary);
+    }
+    .pg-toggle input:checked + .pg-toggle__track::after,
+    .pg-toggle[data-checked="true"] .pg-toggle__track::after {
+      left: var(--vdx-spacing-5);
+    }
+    .pg-toggle input:focus-visible + .pg-toggle__track,
+    .pg-toggle[data-focus="true"] .pg-toggle__track {
+      outline: 2px solid var(--vdx-colors-brand-accent);
+      outline-offset: 2px;
+    }
+    .pg-toggle[data-disabled="true"] { opacity: 0.5; cursor: not-allowed; }
+
+    .pg-toggle--sm .pg-toggle__track {
+      width: var(--vdx-spacing-8);
+      height: var(--vdx-spacing-5);
+    }
+    .pg-toggle--sm .pg-toggle__track::after {
+      width: var(--vdx-spacing-3);
+      height: var(--vdx-spacing-3);
+    }
+    .pg-toggle--sm input:checked + .pg-toggle__track::after,
+    .pg-toggle--sm[data-checked="true"] .pg-toggle__track::after {
+      left: var(--vdx-spacing-4);
+    }
+    .pg-toggle--lg .pg-toggle__track {
+      width: var(--vdx-spacing-12);
+      height: var(--vdx-spacing-8);
+    }
+    .pg-toggle--lg .pg-toggle__track::after {
+      width: var(--vdx-spacing-6);
+      height: var(--vdx-spacing-6);
+    }
+    .pg-toggle--lg input:checked + .pg-toggle__track::after,
+    .pg-toggle--lg[data-checked="true"] .pg-toggle__track::after {
+      left: var(--vdx-spacing-5);
+    }
+
+    /* ---------- Snippet area ---------- */
+    .pg-snippet {
+      border-top: 1px solid var(--vdx-colors-border-subtle);
+      padding: var(--vdx-spacing-6);
+      background: var(--vdx-colors-surface-elevated);
+    }
+    .pg-stage[data-mode="dark"] .pg-snippet {
+      background: var(--vdx-colors-neutral-900);
+      border-top-color: var(--vdx-colors-border-inverse);
+    }
+    .pg-snippet-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--vdx-spacing-4);
+      margin-bottom: var(--vdx-spacing-3);
+    }
+    .pg-snippet pre {
+      margin: 0;
+      padding: var(--vdx-spacing-4);
+      background: var(--vdx-colors-surface-inverse);
+      color: var(--vdx-colors-text-on-inverse);
+      border-radius: var(--vdx-radius-sm);
+      font-family: var(--vdx-typography-font-family-mono);
+      font-size: var(--vdx-typography-font-size-body-s);
+      line-height: var(--vdx-typography-line-height-normal);
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+      max-height: var(--vdx-layout-narrow);
+    }
+
+    .pg-copy-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--vdx-spacing-2);
+      padding-inline: var(--vdx-spacing-4);
+      padding-block: var(--vdx-spacing-2);
+      border: 1px solid var(--vdx-colors-border-default);
+      border-radius: var(--vdx-radius-pill);
+      background: var(--vdx-colors-surface-card);
+      color: var(--vdx-colors-text-primary);
+      font-family: inherit;
+      font-size: var(--vdx-typography-font-size-body-s);
+      font-weight: var(--vdx-typography-font-weight-semibold);
+      cursor: pointer;
+      transition:
+        background var(--vdx-motion-duration-fast) var(--vdx-motion-easing-standard),
+        color var(--vdx-motion-duration-fast) var(--vdx-motion-easing-standard),
+        border-color var(--vdx-motion-duration-fast) var(--vdx-motion-easing-standard);
+    }
+    @media (hover: hover) {
+      .pg-copy-btn:hover {
+        background: var(--vdx-colors-brand-primary);
+        color: var(--vdx-colors-text-on-brand);
+        border-color: var(--vdx-colors-brand-primary);
+      }
+    }
+    .pg-copy-btn:focus-visible {
+      outline: 2px solid var(--vdx-colors-brand-accent);
+      outline-offset: 2px;
+    }
+    .pg-copy-btn[data-copied="true"] {
+      background: var(--vdx-colors-semantic-success);
+      color: var(--vdx-colors-text-on-brand);
+      border-color: var(--vdx-colors-semantic-success);
+    }
+
+    /* ---------- Responsive: stack under 720px ---------- */
+    @media (max-width: 720px) {
+      .pg-grid { grid-template-columns: 1fr; }
+      .pg-panel { position: static; }
+      .pg-stage-canvas { padding: var(--vdx-spacing-6); }
+      .pg-shell { padding-block: var(--vdx-spacing-8); }
+      .pg-matrix { grid-template-columns: 1fr; }
+    }
+
+    /* ---------- Reduced motion ---------- */
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="pg-shell">
+    <header class="pg-header">
+      <h1>Form Inputs</h1>
+      <p>samsung-kr 테마의 폼 컨트롤 상태를 한눈에 비교하고 마크업을 복사하세요.</p>
+    </header>
+
+    <div class="pg-grid">
+      <!-- Left panel: controls -->
+      <aside class="pg-panel" aria-label="Form controls playground panel">
+        <fieldset class="pg-fieldset" data-group="control">
+          <legend class="pg-legend">컨트롤 타입 (Control)</legend>
+          <div class="pg-options" role="radiogroup">
+            <label class="pg-option">
+              <input type="radio" name="control" value="text" checked />
+              <span class="pg-chip">텍스트 입력</span>
+            </label>
+            <label class="pg-option">
+              <input type="radio" name="control" value="select" />
+              <span class="pg-chip">셀렉트</span>
+            </label>
+            <label class="pg-option">
+              <input type="radio" name="control" value="checkbox" />
+              <span class="pg-chip">체크박스</span>
+            </label>
+            <label class="pg-option">
+              <input type="radio" name="control" value="radio" />
+              <span class="pg-chip">라디오</span>
+            </label>
+            <label class="pg-option">
+              <input type="radio" name="control" value="toggle" />
+              <span class="pg-chip">토글</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset class="pg-fieldset" data-group="size">
+          <legend class="pg-legend">크기 (Size)</legend>
+          <div class="pg-options" role="radiogroup">
+            <label class="pg-option">
+              <input type="radio" name="size" value="sm" />
+              <span class="pg-chip">Small</span>
+            </label>
+            <label class="pg-option">
+              <input type="radio" name="size" value="default" checked />
+              <span class="pg-chip">Default</span>
+            </label>
+            <label class="pg-option">
+              <input type="radio" name="size" value="lg" />
+              <span class="pg-chip">Large</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset class="pg-fieldset" data-group="mode">
+          <legend class="pg-legend">다크 모드 (Dark)</legend>
+          <div class="pg-options" role="radiogroup">
+            <label class="pg-option">
+              <input type="radio" name="mode" value="off" checked />
+              <span class="pg-chip">Off</span>
+            </label>
+            <label class="pg-option">
+              <input type="radio" name="mode" value="on" />
+              <span class="pg-chip">On</span>
+            </label>
+          </div>
+        </fieldset>
+      </aside>
+
+      <!-- Right panel: preview + snippet -->
+      <section class="pg-stage" id="pg-stage" aria-label="Form state preview" data-mode="off">
+        <div class="pg-stage-head">
+          <span class="pg-stage-title">State Matrix</span>
+          <span class="pg-stage-title" id="pg-summary" aria-live="polite"></span>
+        </div>
+
+        <div class="pg-stage-canvas">
+          <div class="pg-matrix" id="pg-matrix" aria-live="polite">
+            <!-- state cells rendered here -->
+          </div>
+        </div>
+
+        <div class="pg-snippet">
+          <div class="pg-snippet-head">
+            <span class="pg-stage-title">HTML (전체 상태 매트릭스)</span>
+            <button type="button" class="pg-copy-btn" id="pg-copy">마크업 복사</button>
+          </div>
+          <pre id="pg-snippet"></pre>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    (function () {
+      const root = document;
+      const matrix = root.getElementById('pg-matrix');
+      const snippet = root.getElementById('pg-snippet');
+      const summary = root.getElementById('pg-summary');
+      const stage = root.getElementById('pg-stage');
+      const copyBtn = root.getElementById('pg-copy');
+
+      function readState() {
+        return {
+          control: root.querySelector('input[name="control"]:checked').value,
+          size: root.querySelector('input[name="size"]:checked').value,
+          mode: root.querySelector('input[name="mode"]:checked').value,
+        };
+      }
+
+      // Per-control state matrices. Each cell { label, html } where html is
+      // the raw markup we render AND show in the snippet block. We compose
+      // size-specific class names as we render so the same definition serves
+      // all three sizes.
+      function sizeClass(prefix, size) {
+        if (size === 'sm') return ` ${prefix}--sm`;
+        if (size === 'lg') return ` ${prefix}--lg`;
+        return '';
+      }
+
+      function buildText(size) {
+        const sc = sizeClass('pg-input', size);
+        const baseCls = `input pg-input${sc}`;
+        return [
+          {
+            label: '기본 (Default)',
+            html: `<input type="text" class="${baseCls}" placeholder="값을 입력하세요" />`,
+          },
+          {
+            label: '호버 (Hover · 시뮬레이션)',
+            html: `<input type="text" class="${baseCls} pg-input--hover" placeholder="값을 입력하세요" />`,
+          },
+          {
+            label: '포커스 (Focus · 시뮬레이션)',
+            html: `<input type="text" class="${baseCls} pg-input--focus" placeholder="값을 입력하세요" />`,
+          },
+          {
+            label: '입력값 있음 (Filled)',
+            html: `<input type="text" class="${baseCls}" value="갤럭시 S25" />`,
+          },
+          {
+            label: '비활성 (Disabled)',
+            html: `<input type="text" class="${baseCls}" value="수정 불가" disabled />`,
+          },
+          {
+            label: '오류 (Error)',
+            html:
+              `<input type="text" class="${baseCls} pg-input--error" value="잘못된 값" aria-invalid="true" aria-describedby="err-text" />` +
+              `\n<span id="err-text" class="pg-msg pg-msg--error">필수 항목입니다.</span>`,
+          },
+          {
+            label: '성공 (Success)',
+            html:
+              `<input type="text" class="${baseCls} pg-input--success" value="vd.lumos@gmail.com" />` +
+              `\n<span class="pg-msg pg-msg--success">사용 가능한 이메일입니다.</span>`,
+          },
+        ];
+      }
+
+      function buildSelect(size) {
+        const sc = sizeClass('pg-select', size);
+        const baseCls = `pg-select${sc}`;
+        const options =
+          `<option value="">선택하세요</option>` +
+          `<option value="kr">대한민국</option>` +
+          `<option value="us">미국</option>` +
+          `<option value="jp">일본</option>`;
+        return [
+          { label: '기본 (Default)', html: `<select class="${baseCls}">${options}</select>` },
+          { label: '호버 (Hover · 시뮬레이션)', html: `<select class="${baseCls} pg-select--hover">${options}</select>` },
+          { label: '포커스 (Focus · 시뮬레이션)', html: `<select class="${baseCls} pg-select--focus">${options}</select>` },
+          {
+            label: '선택값 있음 (Selected)',
+            html:
+              `<select class="${baseCls}">` +
+              `<option value="">선택하세요</option>` +
+              `<option value="kr" selected>대한민국</option>` +
+              `<option value="us">미국</option>` +
+              `</select>`,
+          },
+          {
+            label: '비활성 (Disabled)',
+            html:
+              `<select class="${baseCls}" disabled>` +
+              `<option value="kr" selected>대한민국</option>` +
+              `</select>`,
+          },
+          {
+            label: '오류 (Error)',
+            html:
+              `<select class="${baseCls} pg-select--error" aria-invalid="true" aria-describedby="err-select">${options}</select>` +
+              `\n<span id="err-select" class="pg-msg pg-msg--error">국가를 선택해주세요.</span>`,
+          },
+        ];
+      }
+
+      function buildCheckbox(size) {
+        const sc = sizeClass('pg-check', size);
+        const baseCls = `pg-check${sc}`;
+        return [
+          {
+            label: '미선택 (Unchecked)',
+            html: `<label class="${baseCls}"><input type="checkbox" /><span class="pg-check__box"></span><span>약관에 동의합니다</span></label>`,
+          },
+          {
+            label: '선택 (Checked)',
+            html: `<label class="${baseCls}"><input type="checkbox" checked /><span class="pg-check__box"></span><span>약관에 동의합니다</span></label>`,
+          },
+          {
+            label: '비활성-미선택 (Disabled · Unchecked)',
+            html: `<label class="${baseCls}" data-disabled="true"><input type="checkbox" disabled /><span class="pg-check__box"></span><span>현재 사용할 수 없음</span></label>`,
+          },
+          {
+            label: '비활성-선택 (Disabled · Checked)',
+            html: `<label class="${baseCls}" data-disabled="true"><input type="checkbox" checked disabled /><span class="pg-check__box"></span><span>관리자 승인 필요</span></label>`,
+          },
+          {
+            label: '오류 (Error)',
+            html:
+              `<label class="${baseCls}" data-error="true"><input type="checkbox" aria-invalid="true" aria-describedby="err-check" /><span class="pg-check__box"></span><span>필수 약관에 동의</span></label>` +
+              `\n<span id="err-check" class="pg-msg pg-msg--error">필수 항목입니다.</span>`,
+          },
+        ];
+      }
+
+      function buildRadio(size) {
+        const sc = sizeClass('pg-radio', size);
+        const baseCls = `pg-radio${sc}`;
+        return [
+          {
+            label: '미선택 (Unchecked)',
+            html: `<label class="${baseCls}"><input type="radio" name="demo-radio-1" /><span class="pg-radio__dot"></span><span>옵션 A</span></label>`,
+          },
+          {
+            label: '선택 (Checked)',
+            html: `<label class="${baseCls}"><input type="radio" name="demo-radio-2" checked /><span class="pg-radio__dot"></span><span>옵션 A</span></label>`,
+          },
+          {
+            label: '비활성-미선택 (Disabled · Unchecked)',
+            html: `<label class="${baseCls}" data-disabled="true"><input type="radio" name="demo-radio-3" disabled /><span class="pg-radio__dot"></span><span>품절</span></label>`,
+          },
+          {
+            label: '비활성-선택 (Disabled · Checked)',
+            html: `<label class="${baseCls}" data-disabled="true"><input type="radio" name="demo-radio-4" checked disabled /><span class="pg-radio__dot"></span><span>고정값</span></label>`,
+          },
+          {
+            label: '오류 (Error)',
+            html:
+              `<label class="${baseCls}" data-error="true"><input type="radio" name="demo-radio-5" aria-invalid="true" aria-describedby="err-radio" /><span class="pg-radio__dot"></span><span>옵션 A</span></label>` +
+              `\n<span id="err-radio" class="pg-msg pg-msg--error">하나를 선택해주세요.</span>`,
+          },
+        ];
+      }
+
+      function buildToggle(size) {
+        const sc = sizeClass('pg-toggle', size);
+        const baseCls = `pg-toggle${sc}`;
+        return [
+          {
+            label: 'Off',
+            html: `<label class="${baseCls}"><input type="checkbox" role="switch" /><span class="pg-toggle__track"></span><span>알림 받기</span></label>`,
+          },
+          {
+            label: 'On',
+            html: `<label class="${baseCls}"><input type="checkbox" role="switch" checked /><span class="pg-toggle__track"></span><span>알림 받기</span></label>`,
+          },
+          {
+            label: '비활성-Off (Disabled · Off)',
+            html: `<label class="${baseCls}" data-disabled="true"><input type="checkbox" role="switch" disabled /><span class="pg-toggle__track"></span><span>현재 사용 불가</span></label>`,
+          },
+          {
+            label: '비활성-On (Disabled · On)',
+            html: `<label class="${baseCls}" data-disabled="true"><input type="checkbox" role="switch" checked disabled /><span class="pg-toggle__track"></span><span>고정값</span></label>`,
+          },
+        ];
+      }
+
+      function buildMatrix(s) {
+        switch (s.control) {
+          case 'select': return buildSelect(s.size);
+          case 'checkbox': return buildCheckbox(s.size);
+          case 'radio': return buildRadio(s.size);
+          case 'toggle': return buildToggle(s.size);
+          case 'text':
+          default: return buildText(s.size);
+        }
+      }
+
+      function controlLabel(control) {
+        return ({
+          text: '텍스트 입력',
+          select: '셀렉트',
+          checkbox: '체크박스',
+          radio: '라디오',
+          toggle: '토글',
+        })[control] || control;
+      }
+
+      function render() {
+        const s = readState();
+        stage.dataset.mode = s.mode === 'on' ? 'dark' : 'off';
+
+        const cells = buildMatrix(s);
+        // Render the live preview cells.
+        matrix.innerHTML = cells
+          .map(function (cell) {
+            return (
+              `<div class="pg-cell">` +
+                `<span class="pg-cell-label">${cell.label}</span>` +
+                `<div class="pg-cell-control">${cell.html}</div>` +
+              `</div>`
+            );
+          })
+          .join('');
+
+        // Build the copy-able snippet — the FULL state matrix for this
+        // control type. Each cell appears with its label as a comment so
+        // designers can paste the whole table somewhere and skim it.
+        const snippetText = cells
+          .map(function (cell) {
+            return `<!-- ${cell.label} -->\n${cell.html}`;
+          })
+          .join('\n\n');
+        snippet.textContent = snippetText;
+
+        summary.textContent = `${controlLabel(s.control)} · ${s.size} · ${s.mode === 'on' ? 'dark' : 'light'}`;
+        copyBtn.removeAttribute('data-copied');
+        copyBtn.textContent = '마크업 복사';
+      }
+
+      root.querySelectorAll('input[type="radio"]').forEach(function (input) {
+        input.addEventListener('change', render);
+      });
+
+      copyBtn.addEventListener('click', async function () {
+        const text = snippet.textContent || '';
+        try {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            await navigator.clipboard.writeText(text);
+          } else {
+            const ta = root.createElement('textarea');
+            ta.value = text;
+            ta.setAttribute('readonly', '');
+            ta.style.position = 'absolute';
+            ta.style.left = '-9999px';
+            root.body.appendChild(ta);
+            ta.select();
+            root.execCommand('copy');
+            root.body.removeChild(ta);
+          }
+          copyBtn.dataset.copied = 'true';
+          copyBtn.textContent = '복사됨!';
+          setTimeout(function () {
+            copyBtn.removeAttribute('data-copied');
+            copyBtn.textContent = '마크업 복사';
+          }, 1600);
+        } catch (err) {
+          copyBtn.textContent = '복사 실패';
+        }
+      });
+
+      render();
+    })();
+  </script>
+</body>
+</html>

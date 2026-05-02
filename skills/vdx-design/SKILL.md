@@ -69,6 +69,27 @@ Every generated page should start like this. Replace `{{theme.defaultLang}}` wit
 </html>
 ```
 
+## Decision flow (A/B 시각 비교)
+
+When the user's request has a meaningful taste choice with no objectively right answer (hero layout, button radius, card density, brand emphasis), do NOT silently pick — let the user decide visually with `vdx-decide`.
+
+When to invoke:
+- 두 변형이 모두 합리적이고, 객관적 우열이 없음 (단순 a11y/스펙 위반 결정은 그냥 알아서 해결).
+- 사용자의 페이지에 핵심 시각 요소가 걸려있음 (히어로, CTA 모서리 모양 등).
+- 한 세션에서 2회 이하 — 남용 금지.
+
+Procedure:
+1. Generate two variant HTML fragments (partial — `<section>` blocks, no `<html>/<body>` wrapper). Save them to `.vdx-decisions/<topic>-a.html` and `.vdx-decisions/<topic>-b.html`. Both variants must already use only `var(--vdx-...)` tokens.
+2. Run via Bash:
+   ```
+   npx vdx-decide --topic <topic> --question "<짧은 한국어 질문>" --a .vdx-decisions/<topic>-a.html --b .vdx-decisions/<topic>-b.html
+   ```
+   The CLI starts a tiny HTTP server on a free port, opens the user's browser to a side-by-side comparison, and waits for the user to click. It prints **only** `A` or `B` to stdout, then exits 0. On timeout (default 600s) it exits 1 with no stdout.
+3. Read the stdout result. Apply the chosen variant directly to the page being generated. Annotate with a comment: `<!-- decision: <topic> = <choice> via vdx-decide -->`.
+4. Continue the conversation acknowledging the chosen variant. Do not show the user the rejected variant unless they ask.
+
+Options: `--theme <id>` (default `samsung-kr`), `--port <n>` (default auto), `--timeout <secs>` (default 600).
+
 ## Token usage rules
 
 - **Always reference tokens by CSS variable.** `color: var(--vdx-colors-text-primary);` is right. `color: #1A1A1A;` is wrong, even when the value is correct, because the theme can change.

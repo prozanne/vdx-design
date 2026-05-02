@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>그리드 레이아웃 플레이그라운드 — Samsung Korea</title>
+  <link rel="stylesheet" href="../tokens.css">
+  <link rel="stylesheet" href="../components.css">
+  <style>
+    /* ---------- Playground chrome ---------- */
+    .pg-controls {
+      background: var(--vdx-colors-surface-elevated);
+      border-bottom: 1px solid var(--vdx-colors-border-subtle);
+      padding-block: var(--vdx-spacing-6);
+      position: sticky;
+      top: 0;
+      z-index: var(--vdx-z-index-sticky);
+    }
+    .pg-controls .container-wide {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--vdx-spacing-8);
+    }
+    .pg-fieldset {
+      display: flex;
+      align-items: center;
+      gap: var(--vdx-spacing-3);
+      border: none;
+      padding: 0;
+      margin: 0;
+    }
+    .pg-fieldset legend {
+      font-size: var(--vdx-typography-font-size-body-s);
+      font-weight: 600;
+      color: var(--vdx-colors-text-secondary);
+      margin-right: var(--vdx-spacing-2);
+      padding: 0;
+      float: left;
+    }
+    .pg-options {
+      display: flex;
+      gap: var(--vdx-spacing-1);
+      background: var(--vdx-colors-surface-card);
+      border: 1px solid var(--vdx-colors-border-default);
+      border-radius: var(--vdx-radius-pill);
+      padding: var(--vdx-spacing-1);
+    }
+    .pg-options input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .pg-options label {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: var(--vdx-spacing-10);
+      padding-inline: var(--vdx-spacing-4);
+      padding-block: var(--vdx-spacing-2);
+      font-size: var(--vdx-typography-font-size-body-s);
+      font-weight: 500;
+      color: var(--vdx-colors-text-secondary);
+      border-radius: var(--vdx-radius-pill);
+      cursor: pointer;
+      transition: background var(--vdx-motion-duration-fast) var(--vdx-motion-easing-standard),
+                  color var(--vdx-motion-duration-fast) var(--vdx-motion-easing-standard);
+    }
+    .pg-options input:checked + label {
+      background: var(--vdx-colors-brand-primary);
+      color: var(--vdx-colors-text-on-brand);
+    }
+    .pg-options input:focus-visible + label {
+      outline: 2px solid var(--vdx-colors-brand-accent);
+      outline-offset: 2px;
+    }
+    .pg-actions {
+      margin-left: auto;
+      display: flex;
+      gap: var(--vdx-spacing-3);
+      align-items: center;
+    }
+    .pg-toast {
+      font-size: var(--vdx-typography-font-size-body-s);
+      color: var(--vdx-colors-semantic-success);
+      font-weight: 600;
+      opacity: 0;
+      transition: opacity var(--vdx-motion-duration-base) var(--vdx-motion-easing-standard);
+    }
+    .pg-toast.is-visible { opacity: 1; }
+
+    /* ---------- Stage container ---------- */
+    .pg-stage { padding-block: var(--vdx-spacing-12); }
+    .pg-stage[data-container="narrow"]  .pg-container-wrap { max-width: var(--vdx-layout-narrow); }
+    .pg-stage[data-container="default"] .pg-container-wrap { max-width: var(--vdx-layout-content); }
+    .pg-stage[data-container="wide"]    .pg-container-wrap { max-width: var(--vdx-layout-wide); }
+    .pg-container-wrap {
+      margin: 0 auto;
+      padding-inline: var(--vdx-spacing-6);
+      transition: max-width var(--vdx-motion-duration-base) var(--vdx-motion-easing-standard);
+    }
+    .pg-meta {
+      font-size: var(--vdx-typography-font-size-body-s);
+      color: var(--vdx-colors-text-muted);
+      margin-bottom: var(--vdx-spacing-6);
+    }
+
+    /* ---------- Layouts ----------
+     * The playground re-renders the inner markup per layout choice; the
+     * shared `.pg-grid` element carries the live `gap` from the radio. */
+    .pg-grid { display: grid; gap: var(--vdx-spacing-6); }
+    .pg-grid[data-gap="3"] { gap: var(--vdx-spacing-3); }
+    .pg-grid[data-gap="4"] { gap: var(--vdx-spacing-4); }
+    .pg-grid[data-gap="6"] { gap: var(--vdx-spacing-6); }
+    .pg-grid[data-gap="8"] { gap: var(--vdx-spacing-8); }
+
+    /* A — hero + sidebar (2/3 + 1/3) */
+    .pg-grid--hero { grid-template-columns: 2fr 1fr; }
+    .pg-grid--hero .pg-aside { display: grid; gap: inherit; align-content: start; }
+
+    /* B — three even columns */
+    .pg-grid--three { grid-template-columns: repeat(3, 1fr); }
+
+    /* C — four dense columns */
+    .pg-grid--four { grid-template-columns: repeat(4, 1fr); }
+
+    /* D — magazine: feature spans 2 cols / 2 rows, 4 medium cards fill rest */
+    .pg-grid--magazine {
+      grid-template-columns: repeat(3, 1fr);
+      grid-auto-rows: 1fr;
+    }
+    .pg-grid--magazine .pg-feature { grid-column: span 2; grid-row: span 2; }
+
+    /* ---------- Listing card ---------- */
+    .pg-card {
+      background: var(--vdx-colors-surface-card);
+      border: 1px solid var(--vdx-colors-border-subtle);
+      border-radius: var(--vdx-components-card-radius);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      text-decoration: none;
+      color: inherit;
+      transition: box-shadow var(--vdx-motion-duration-base) var(--vdx-motion-easing-standard),
+                  transform var(--vdx-motion-duration-base) var(--vdx-motion-easing-standard);
+    }
+    @media (hover: hover) {
+      .pg-card:hover {
+        box-shadow: var(--vdx-shadow-md);
+        transform: translateY(-2px);
+      }
+    }
+    .pg-card:focus-visible {
+      outline: 2px solid var(--vdx-colors-brand-accent);
+      outline-offset: 2px;
+    }
+    .pg-card .image {
+      aspect-ratio: 16 / 10;
+      background: var(--vdx-colors-neutral-100);
+      overflow: hidden;
+    }
+    .pg-card .image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .pg-card .body {
+      padding: var(--vdx-spacing-5);
+      display: flex;
+      flex-direction: column;
+      gap: var(--vdx-spacing-2);
+      flex: 1;
+    }
+    .pg-card .eyebrow {
+      font-size: var(--vdx-typography-font-size-caption);
+      font-weight: 600;
+      letter-spacing: var(--vdx-typography-letter-spacing-wide);
+      text-transform: uppercase;
+      color: var(--vdx-colors-brand-secondary);
+    }
+    .pg-card .title {
+      font-family: var(--vdx-typography-font-family-display);
+      font-weight: 700;
+      font-size: var(--vdx-typography-font-size-h4);
+      letter-spacing: var(--vdx-typography-letter-spacing-tight);
+      line-height: var(--vdx-typography-line-height-tight);
+    }
+    .pg-card .desc {
+      font-size: var(--vdx-typography-font-size-body-s);
+      color: var(--vdx-colors-text-secondary);
+    }
+
+    /* Feature & dense modifiers */
+    .pg-card--feature .image { aspect-ratio: 16 / 9; }
+    .pg-card--feature .title { font-size: var(--vdx-typography-font-size-h2); }
+    .pg-card--feature .body { padding: var(--vdx-spacing-8); gap: var(--vdx-spacing-3); }
+    .pg-card--dense .body { padding: var(--vdx-spacing-4); }
+    .pg-card--dense .title { font-size: var(--vdx-typography-font-size-body-l); }
+
+    /* ---------- Markup output ---------- */
+    .pg-output {
+      margin-block: var(--vdx-spacing-12);
+    }
+    .pg-output details {
+      background: var(--vdx-colors-surface-elevated);
+      border: 1px solid var(--vdx-colors-border-subtle);
+      border-radius: var(--vdx-components-card-radius);
+      padding: var(--vdx-spacing-5) var(--vdx-spacing-6);
+    }
+    .pg-output summary {
+      font-weight: 600;
+      cursor: pointer;
+      font-size: var(--vdx-typography-font-size-body-m);
+    }
+    .pg-output pre {
+      margin-top: var(--vdx-spacing-4);
+      padding: var(--vdx-spacing-5);
+      background: var(--vdx-colors-neutral-900);
+      color: var(--vdx-colors-text-on-inverse);
+      border-radius: var(--vdx-radius-md);
+      font-family: var(--vdx-typography-font-family-mono);
+      font-size: var(--vdx-typography-font-size-body-s);
+      line-height: var(--vdx-typography-line-height-normal);
+      overflow: auto;
+      white-space: pre;
+    }
+
+    /* ---------- Responsive collapse below 720px ---------- */
+    @media (max-width: 720px) {
+      .pg-grid--hero,
+      .pg-grid--three,
+      .pg-grid--four,
+      .pg-grid--magazine { grid-template-columns: 1fr; }
+      .pg-grid--magazine .pg-feature { grid-column: auto; grid-row: auto; }
+      .pg-controls .container-wide { gap: var(--vdx-spacing-4); }
+      .pg-actions { margin-left: 0; width: 100%; justify-content: flex-end; }
+    }
+
+    /* ---------- Reduced motion ---------- */
+    @media (prefers-reduced-motion: reduce) {
+      .pg-card,
+      .pg-toast,
+      .pg-container-wrap { transition: none; }
+      .pg-card:hover { transform: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="pg-controls" aria-label="플레이그라운드 컨트롤">
+    <form class="container-wide" id="pg-form" onsubmit="return false;">
+
+      <fieldset class="pg-fieldset" aria-label="레이아웃 선택">
+        <legend>레이아웃</legend>
+        <div class="pg-options" role="radiogroup">
+          <input type="radio" name="layout" id="layout-a" value="A" checked>
+          <label for="layout-a">A · 히어로</label>
+          <input type="radio" name="layout" id="layout-b" value="B">
+          <label for="layout-b">B · 3열</label>
+          <input type="radio" name="layout" id="layout-c" value="C">
+          <label for="layout-c">C · 4열</label>
+          <input type="radio" name="layout" id="layout-d" value="D">
+          <label for="layout-d">D · 매거진</label>
+        </div>
+      </fieldset>
+
+      <fieldset class="pg-fieldset" aria-label="카드 간격 선택">
+        <legend>카드 간격</legend>
+        <div class="pg-options" role="radiogroup">
+          <input type="radio" name="gap" id="gap-3" value="3">
+          <label for="gap-3">3</label>
+          <input type="radio" name="gap" id="gap-4" value="4">
+          <label for="gap-4">4</label>
+          <input type="radio" name="gap" id="gap-6" value="6" checked>
+          <label for="gap-6">6</label>
+          <input type="radio" name="gap" id="gap-8" value="8">
+          <label for="gap-8">8</label>
+        </div>
+      </fieldset>
+
+      <fieldset class="pg-fieldset" aria-label="컨테이너 폭 선택">
+        <legend>컨테이너 폭</legend>
+        <div class="pg-options" role="radiogroup">
+          <input type="radio" name="container" id="ctn-narrow" value="narrow">
+          <label for="ctn-narrow">narrow</label>
+          <input type="radio" name="container" id="ctn-default" value="default" checked>
+          <label for="ctn-default">default</label>
+          <input type="radio" name="container" id="ctn-wide" value="wide">
+          <label for="ctn-wide">wide</label>
+        </div>
+      </fieldset>
+
+      <div class="pg-actions">
+        <span class="pg-toast" id="pg-toast" role="status" aria-live="polite">복사됨</span>
+        <button type="button" class="btn btn-primary btn-sm" id="pg-copy">마크업 복사</button>
+      </div>
+    </form>
+  </header>
+
+  <main class="pg-stage" id="pg-stage" data-container="default">
+    <div class="pg-container-wrap">
+      <p class="pg-meta" id="pg-meta">레이아웃 A · gap var(--vdx-spacing-6) · default 컨테이너</p>
+      <div class="pg-grid pg-grid--hero" id="pg-grid" data-gap="6" aria-label="상품 리스팅"></div>
+
+      <section class="pg-output" aria-label="마크업 미리보기">
+        <details>
+          <summary>현재 레이아웃 마크업 보기</summary>
+          <pre id="pg-source"></pre>
+        </details>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    // ---------- Card data (Korean titles, placehold.co images) ----------
+    const cards = [
+      { eyebrow: '신제품',   title: 'Galaxy S26 Ultra',           desc: '한층 더 진화한 Galaxy AI 카메라 시스템.', img: 'https://placehold.co/800x500/1428A0/FFFFFF?text=Galaxy+S26' },
+      { eyebrow: '추천',     title: 'Bespoke 무풍 에어컨',         desc: '맞춤 색상, 인공지능 절약 모드까지.',     img: 'https://placehold.co/800x500/2189FF/FFFFFF?text=Bespoke+AC' },
+      { eyebrow: '베스트',   title: 'Neo QLED 8K TV',             desc: '뉴럴 퀀텀 프로세서로 더 선명하게.',     img: 'https://placehold.co/800x500/000000/FFFFFF?text=Neo+QLED' },
+      { eyebrow: '한정',     title: 'Galaxy Buds3 Pro',           desc: '듀얼 드라이버로 깊고 풍부한 사운드.',   img: 'https://placehold.co/800x500/767676/FFFFFF?text=Buds3+Pro' },
+      { eyebrow: '인기',     title: 'Galaxy Watch7',              desc: '하루 종일 함께하는 똑똑한 헬스 매니저.', img: 'https://placehold.co/800x500/E12832/FFFFFF?text=Watch7' },
+      { eyebrow: '리뷰 만점', title: 'Galaxy Tab S10 Ultra',       desc: '대화면에서 빛나는 S Pen 경험.',         img: 'https://placehold.co/800x500/00A96E/FFFFFF?text=Tab+S10' },
+      { eyebrow: '신상',     title: 'Bespoke 4-도어 냉장고',       desc: 'AI 인사이드, 식재료를 알아보다.',       img: 'https://placehold.co/800x500/F2A100/FFFFFF?text=Bespoke+Fridge' },
+      { eyebrow: '할인',     title: 'Galaxy Book5 Pro',           desc: 'Copilot+ PC, 어디서나 빠르게.',         img: 'https://placehold.co/800x500/1A1A1A/FFFFFF?text=Galaxy+Book5' }
+    ];
+
+    // ---------- Layout renderers ----------
+    function cardHtml(c, modifier) {
+      const cls = modifier ? `pg-card ${modifier}` : 'pg-card';
+      return [
+        `<a class="${cls}" href="#">`,
+        `  <div class="image"><img src="${c.img}" alt="" loading="lazy"></div>`,
+        `  <div class="body">`,
+        `    <span class="eyebrow">${c.eyebrow}</span>`,
+        `    <h3 class="title">${c.title}</h3>`,
+        `    <p class="desc">${c.desc}</p>`,
+        `  </div>`,
+        `</a>`
+      ].join('\n');
+    }
+
+    function layoutA() {
+      // Hero (large) on left, 3 stacked sidebar cards on right.
+      const hero = cardHtml(cards[0], 'pg-card--feature');
+      const aside = [cards[1], cards[2], cards[3]].map(c => cardHtml(c)).join('\n');
+      return `${hero}\n<div class="pg-aside">\n${aside}\n</div>`;
+    }
+    function layoutB() {
+      return cards.slice(0, 6).map(c => cardHtml(c)).join('\n');
+    }
+    function layoutC() {
+      return cards.slice(0, 8).map(c => cardHtml(c, 'pg-card--dense')).join('\n');
+    }
+    function layoutD() {
+      const feature = cardHtml(cards[0], 'pg-card--feature pg-feature');
+      const rest = [cards[1], cards[2], cards[3], cards[4]].map(c => cardHtml(c)).join('\n');
+      return `${feature}\n${rest}`;
+    }
+
+    const renderers = { A: layoutA, B: layoutB, C: layoutC, D: layoutD };
+    const layoutClass = { A: 'pg-grid--hero', B: 'pg-grid--three', C: 'pg-grid--four', D: 'pg-grid--magazine' };
+    const layoutLabel = { A: 'A · 히어로 + 사이드바', B: 'B · 3열 균등', C: 'C · 4열 콤팩트', D: 'D · 매거진' };
+
+    // ---------- State binding ----------
+    const form = document.getElementById('pg-form');
+    const stage = document.getElementById('pg-stage');
+    const grid = document.getElementById('pg-grid');
+    const meta = document.getElementById('pg-meta');
+    const source = document.getElementById('pg-source');
+
+    function currentState() {
+      const data = new FormData(form);
+      return {
+        layout: data.get('layout'),
+        gap: data.get('gap'),
+        container: data.get('container')
+      };
+    }
+
+    function buildGridMarkup(state) {
+      const inner = renderers[state.layout]();
+      const indented = inner.split('\n').map(l => '  ' + l).join('\n');
+      return `<div class="pg-grid ${layoutClass[state.layout]}" data-gap="${state.gap}">\n${indented}\n</div>`;
+    }
+
+    function render() {
+      const state = currentState();
+
+      // Apply container width via data attr (CSS handles the swap).
+      stage.dataset.container = state.container;
+
+      // Re-class the grid for the chosen layout, set live gap.
+      grid.className = `pg-grid ${layoutClass[state.layout]}`;
+      grid.dataset.gap = state.gap;
+      grid.innerHTML = renderers[state.layout]();
+
+      meta.textContent = `${layoutLabel[state.layout]} · gap var(--vdx-spacing-${state.gap}) · ${state.container} 컨테이너`;
+      source.textContent = buildGridMarkup(state);
+    }
+
+    form.addEventListener('change', render);
+
+    // ---------- Copy markup ----------
+    const copyBtn = document.getElementById('pg-copy');
+    const toast = document.getElementById('pg-toast');
+    let toastTimer = null;
+
+    copyBtn.addEventListener('click', async () => {
+      const markup = buildGridMarkup(currentState());
+      try {
+        await navigator.clipboard.writeText(markup);
+        toast.classList.add('is-visible');
+      } catch (_) {
+        // Fallback for non-secure contexts.
+        const ta = document.createElement('textarea');
+        ta.value = markup;
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); toast.classList.add('is-visible'); }
+        catch (e) { toast.textContent = '복사 실패'; toast.classList.add('is-visible'); }
+        document.body.removeChild(ta);
+      }
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove('is-visible'), 1600);
+    });
+
+    render();
+  </script>
+
+</body>
+</html>

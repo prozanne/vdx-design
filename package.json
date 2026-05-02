@@ -7,7 +7,11 @@
   "scripts": {
     "test": "node --test",
     "build:tokens": "node lib/token-to-css.js",
-    "list:themes": "node lib/theme-registry.js"
+    "list:themes": "node lib/theme-registry.js",
+    "decide": "node lib/decide.js"
+  },
+  "bin": {
+    "vdx-decide": "lib/decide.js"
   },
   "engines": {
     "node": ">=20"

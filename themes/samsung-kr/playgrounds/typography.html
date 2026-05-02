@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>타이포그래피 스케일 탐색기 — Samsung Korea</title>
+  <link rel="stylesheet" href="../tokens.css">
+  <link rel="stylesheet" href="../components.css">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--vdx-typography-font-family-sans);
+      font-size: var(--vdx-typography-font-size-body-m);
+      line-height: var(--vdx-typography-line-height-normal);
+      color: var(--vdx-colors-text-primary);
+      background: var(--vdx-colors-surface-page);
+      transition: background-color var(--vdx-motion-duration-base) var(--vdx-motion-easing-standard),
+                  color var(--vdx-motion-duration-base) var(--vdx-motion-easing-standard);
+    }
+
+    body[data-dark="on"] {
+      background: var(--vdx-colors-surface-inverse);
+      color: var(--vdx-colors-text-on-inverse);
+    }
+
+    .page {
+      max-width: var(--vdx-layout-content);
+      margin-inline: auto;
+      padding-inline: var(--vdx-spacing-6);
+      padding-block: var(--vdx-spacing-12);
+    }
+
+    .page-header {
+      margin-bottom: var(--vdx-spacing-10);
+    }
+
+    .page-title {
+      font-family: var(--vdx-typography-font-family-display);
+      font-size: var(--vdx-typography-font-size-h1);
+      font-weight: var(--vdx-typography-font-weight-bold);
+      line-height: var(--vdx-typography-line-height-tight);
+      letter-spacing: var(--vdx-typography-letter-spacing-tight);
+      margin: 0 0 var(--vdx-spacing-2) 0;
+    }
+
+    .page-subtitle {
+      font-size: var(--vdx-typography-font-size-body-l);
+      color: var(--vdx-colors-text-secondary);
+      margin: 0;
+    }
+
+    body[data-dark="on"] .page-subtitle {
+      color: var(--vdx-colors-text-on-inverse-secondary);
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--vdx-spacing-5);
+      padding: var(--vdx-spacing-6);
+      background: var(--vdx-colors-surface-elevated);
+      border: 1px solid var(--vdx-colors-border-subtle);
+      border-radius: var(--vdx-radius-md);
+      margin-bottom: var(--vdx-spacing-10);
+    }
+
+    body[data-dark="on"] .controls {
+      background: var(--vdx-colors-neutral-900);
+      border-color: var(--vdx-colors-border-inverse);
+    }
+
+    @media (min-width: 768px) {
+      .controls {
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--vdx-spacing-8);
+      }
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: var(--vdx-spacing-3);
+    }
+
+    .control-label {
+      font-size: var(--vdx-typography-font-size-body-s);
+      font-weight: var(--vdx-typography-font-weight-semibold);
+      color: var(--vdx-colors-text-primary);
+      letter-spacing: var(--vdx-typography-letter-spacing-wide);
+      text-transform: uppercase;
+    }
+
+    body[data-dark="on"] .control-label {
+      color: var(--vdx-colors-text-on-inverse);
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--vdx-spacing-2);
+    }
+
+    .chip {
+      font-family: inherit;
+      font-size: var(--vdx-typography-font-size-body-s);
+      font-weight: var(--vdx-typography-font-weight-medium);
+      color: var(--vdx-colors-text-primary);
+      background: var(--vdx-colors-surface-card);
+      border: 1px solid var(--vdx-colors-border-default);
+      border-radius: var(--vdx-radius-pill);
+      padding-inline: var(--vdx-spacing-4);
+      padding-block: var(--vdx-spacing-2);
+      cursor: pointer;
+      transition: background-color var(--vdx-motion-duration-fast) var(--vdx-motion-easing-standard),
+                  color var(--vdx-motion-duration-fast) var(--vdx-motion-easing-standard),
+                  border-color var(--vdx-motion-duration-fast) var(--vdx-motion-easing-standard);
+    }
+
+    .chip:hover {
+      border-color: var(--vdx-colors-border-strong);
+    }
+
+    .chip[aria-pressed="true"] {
+      background: var(--vdx-colors-brand-primary);
+      color: var(--vdx-colors-text-on-brand);
+      border-color: var(--vdx-colors-brand-primary);
+    }
+
+    body[data-dark="on"] .chip {
+      background: var(--vdx-colors-neutral-1000);
+      color: var(--vdx-colors-text-on-inverse);
+      border-color: var(--vdx-colors-border-inverse);
+    }
+
+    body[data-dark="on"] .chip:hover {
+      border-color: var(--vdx-colors-neutral-300);
+    }
+
+    body[data-dark="on"] .chip[aria-pressed="true"] {
+      background: var(--vdx-colors-neutral-0);
+      color: var(--vdx-colors-text-primary);
+      border-color: var(--vdx-colors-neutral-0);
+    }
+
+    .chip:focus-visible {
+      outline: 2px solid var(--vdx-colors-brand-accent);
+      outline-offset: 2px;
+    }
+
+    .scale-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: var(--vdx-spacing-2);
+    }
+
+    .scale-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--vdx-spacing-3);
+      padding: var(--vdx-spacing-5);
+      background: var(--vdx-colors-surface-card);
+      border: 1px solid var(--vdx-colors-border-subtle);
+      border-radius: var(--vdx-radius-md);
+      cursor: pointer;
+      text-align: left;
+      width: 100%;
+      font-family: inherit;
+      color: inherit;
+      transition: border-color var(--vdx-motion-duration-fast) var(--vdx-motion-easing-standard),
+                  background-color var(--vdx-motion-duration-fast) var(--vdx-motion-easing-standard);
+    }
+
+    .scale-row:hover {
+      border-color: var(--vdx-colors-border-strong);
+    }
+
+    .scale-row:focus-visible {
+      outline: 2px solid var(--vdx-colors-brand-accent);
+      outline-offset: 2px;
+    }
+
+    body[data-dark="on"] .scale-row {
+      background: var(--vdx-colors-neutral-900);
+      border-color: var(--vdx-colors-border-inverse);
+    }
+
+    body[data-dark="on"] .scale-row:hover {
+      border-color: var(--vdx-colors-neutral-300);
+    }
+
+    @media (min-width: 768px) {
+      .scale-row {
+        grid-template-columns: minmax(220px, 1fr) auto 2fr;
+        align-items: baseline;
+        gap: var(--vdx-spacing-6);
+      }
+    }
+
+    .scale-meta {
+      display: flex;
+      flex-direction: column;
+      gap: var(--vdx-spacing-1);
+    }
+
+    .token-name {
+      font-family: var(--vdx-typography-font-family-mono);
+      font-size: var(--vdx-typography-font-size-body-s);
+      font-weight: var(--vdx-typography-font-weight-medium);
+      color: var(--vdx-colors-text-secondary);
+      word-break: break-all;
+    }
+
+    body[data-dark="on"] .token-name {
+      color: var(--vdx-colors-text-on-inverse-secondary);
+    }
+
+    .token-label {
+      font-size: var(--vdx-typography-font-size-caption);
+      color: var(--vdx-colors-text-muted);
+      letter-spacing: var(--vdx-typography-letter-spacing-wide);
+      text-transform: uppercase;
+    }
+
+    .computed-px {
+      font-family: var(--vdx-typography-font-family-mono);
+      font-size: var(--vdx-typography-font-size-body-s);
+      font-weight: var(--vdx-typography-font-weight-semibold);
+      color: var(--vdx-colors-brand-secondary);
+      white-space: nowrap;
+    }
+
+    body[data-dark="on"] .computed-px {
+      color: var(--vdx-colors-brand-accent);
+    }
+
+    .sample {
+      font-family: var(--vdx-typography-font-family-display);
+      letter-spacing: var(--vdx-typography-letter-spacing-tight);
+      margin: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: var(--vdx-spacing-8);
+      left: 50%;
+      transform: translateX(-50%) translateY(var(--vdx-spacing-4));
+      background: var(--vdx-colors-surface-inverse);
+      color: var(--vdx-colors-text-on-inverse);
+      padding-inline: var(--vdx-spacing-5);
+      padding-block: var(--vdx-spacing-3);
+      border-radius: var(--vdx-radius-pill);
+      font-size: var(--vdx-typography-font-size-body-s);
+      font-weight: var(--vdx-typography-font-weight-medium);
+      box-shadow: var(--vdx-shadow-lg);
+      opacity: 0;
+      pointer-events: none;
+      z-index: var(--vdx-z-index-toast);
+      transition: opacity var(--vdx-motion-duration-base) var(--vdx-motion-easing-standard),
+                  transform var(--vdx-motion-duration-base) var(--vdx-motion-easing-standard);
+    }
+
+    .toast[data-visible="true"] {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    body[data-dark="on"] .toast {
+      background: var(--vdx-colors-neutral-0);
+      color: var(--vdx-colors-text-primary);
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        transition-duration: 1ms !important;
+        animation-duration: 1ms !important;
+      }
+    }
+  </style>
+</head>
+<body data-dark="off">
+
+  <main class="page">
+
+    <header class="page-header">
+      <h1 class="page-title">타이포그래피 스케일 탐색기</h1>
+      <p class="page-subtitle">samsung-kr 테마의 글꼴 크기 토큰을 한눈에 확인하고 스니펫을 복사하세요.</p>
+    </header>
+
+    <section class="controls" aria-label="타이포그래피 옵션">
+      <div class="control-group">
+        <span class="control-label" id="weight-label">글꼴 무게</span>
+        <div class="chip-row" role="radiogroup" aria-labelledby="weight-label" data-control="weight"></div>
+      </div>
+
+      <div class="control-group">
+        <span class="control-label" id="lh-label">줄 높이</span>
+        <div class="chip-row" role="radiogroup" aria-labelledby="lh-label" data-control="lineHeight"></div>
+      </div>
+
+      <div class="control-group">
+        <span class="control-label" id="dark-label">다크 모드</span>
+        <div class="chip-row" role="radiogroup" aria-labelledby="dark-label" data-control="dark">
+          <button type="button" class="chip" role="radio" data-value="off" aria-pressed="true">끄기</button>
+          <button type="button" class="chip" role="radio" data-value="on" aria-pressed="false">켜기</button>
+        </div>
+      </div>
+    </section>
+
+    <ul class="scale-list" id="scale-list" aria-label="글꼴 크기 토큰 목록"></ul>
+
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" data-visible="false"></div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      // Token order: caption -> displayXL
+      var SIZES = [
+        { key: 'caption',    token: '--vdx-typography-font-size-caption' },
+        { key: 'bodyS',      token: '--vdx-typography-font-size-body-s' },
+        { key: 'bodyM',      token: '--vdx-typography-font-size-body-m' },
+        { key: 'bodyL',      token: '--vdx-typography-font-size-body-l' },
+        { key: 'h4',         token: '--vdx-typography-font-size-h4' },
+        { key: 'h3',         token: '--vdx-typography-font-size-h3' },
+        { key: 'h2',         token: '--vdx-typography-font-size-h2' },
+        { key: 'h1',         token: '--vdx-typography-font-size-h1' },
+        { key: 'displayM',   token: '--vdx-typography-font-size-display-m' },
+        { key: 'displayL',   token: '--vdx-typography-font-size-display-l' },
+        { key: 'displayXL',  token: '--vdx-typography-font-size-display-xl' }
+      ];
+
+      var WEIGHTS = [
+        { value: 'regular',  label: 'Regular',  token: '--vdx-typography-font-weight-regular' },
+        { value: 'medium',   label: 'Medium',   token: '--vdx-typography-font-weight-medium' },
+        { value: 'semibold', label: 'Semibold', token: '--vdx-typography-font-weight-semibold' },
+        { value: 'bold',     label: 'Bold',     token: '--vdx-typography-font-weight-bold' }
+      ];
+
+      var LINE_HEIGHTS = [
+        { value: 'tight',   label: 'Tight',   token: '--vdx-typography-line-height-tight' },
+        { value: 'normal',  label: 'Normal',  token: '--vdx-typography-line-height-normal' },
+        { value: 'relaxed', label: 'Relaxed', token: '--vdx-typography-line-height-relaxed' }
+      ];
+
+      var SAMPLE = '삼성의 새로운 경험을 만나보세요.';
+
+      var state = {
+        weight: 'regular',
+        lineHeight: 'normal',
+        dark: 'off'
+      };
+
+      var listEl = document.getElementById('scale-list');
+      var toastEl = document.getElementById('toast');
+      var toastTimer = null;
+
+      function showToast(message) {
+        toastEl.textContent = message;
+        toastEl.setAttribute('data-visible', 'true');
+        if (toastTimer) {
+          window.clearTimeout(toastTimer);
+        }
+        toastTimer = window.setTimeout(function () {
+          toastEl.setAttribute('data-visible', 'false');
+        }, 1800);
+      }
+
+      function copyText(text) {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          return navigator.clipboard.writeText(text).catch(function () {
+            return fallbackCopy(text);
+          });
+        }
+        return fallbackCopy(text);
+      }
+
+      function fallbackCopy(text) {
+        return new Promise(function (resolve) {
+          var ta = document.createElement('textarea');
+          ta.value = text;
+          ta.setAttribute('readonly', '');
+          ta.style.position = 'absolute';
+          ta.style.left = '-9999px';
+          document.body.appendChild(ta);
+          ta.select();
+          try { document.execCommand('copy'); } catch (e) {}
+          document.body.removeChild(ta);
+          resolve();
+        });
+      }
+
+      function buildChipGroup(container, items, controlName) {
+        items.forEach(function (item) {
+          var btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'chip';
+          btn.setAttribute('role', 'radio');
+          btn.setAttribute('data-value', item.value);
+          btn.setAttribute('aria-pressed', state[controlName] === item.value ? 'true' : 'false');
+          btn.textContent = item.label;
+          btn.addEventListener('click', function () {
+            state[controlName] = item.value;
+            updateChipGroup(container, controlName);
+            applyState();
+          });
+          container.appendChild(btn);
+        });
+      }
+
+      function updateChipGroup(container, controlName) {
+        var chips = container.querySelectorAll('.chip');
+        chips.forEach(function (chip) {
+          var value = chip.getAttribute('data-value');
+          chip.setAttribute('aria-pressed', state[controlName] === value ? 'true' : 'false');
+        });
+      }
+
+      function buildList() {
+        SIZES.forEach(function (size) {
+          var li = document.createElement('li');
+
+          var btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'scale-row';
+          btn.setAttribute('data-key', size.key);
+          btn.setAttribute('data-token', size.token);
+          btn.setAttribute('aria-label', size.key + ' 토큰 스니펫 복사');
+
+          var meta = document.createElement('div');
+          meta.className = 'scale-meta';
+
+          var label = document.createElement('span');
+          label.className = 'token-label';
+          label.textContent = size.key;
+
+          var name = document.createElement('span');
+          name.className = 'token-name';
+          name.textContent = size.token;
+
+          meta.appendChild(label);
+          meta.appendChild(name);
+
+          var px = document.createElement('span');
+          px.className = 'computed-px';
+          px.setAttribute('data-px-for', size.key);
+          px.textContent = '— px';
+
+          var sample = document.createElement('p');
+          sample.className = 'sample';
+          sample.setAttribute('data-sample-for', size.key);
+          sample.setAttribute('lang', 'ko');
+          sample.textContent = SAMPLE;
+          sample.style.setProperty('font-size', 'var(' + size.token + ')');
+
+          btn.appendChild(meta);
+          btn.appendChild(px);
+          btn.appendChild(sample);
+
+          btn.addEventListener('click', function () {
+            var weightToken = WEIGHTS.find(function (w) { return w.value === state.weight; }).token;
+            var lhToken = LINE_HEIGHTS.find(function (l) { return l.value === state.lineHeight; }).token;
+            var snippet =
+              'font-size: var(' + size.token + ');\n' +
+              'line-height: var(' + lhToken + ');\n' +
+              'font-weight: var(' + weightToken + ');';
+            copyText(snippet).then(function () {
+              showToast('스니펫 복사: ' + size.key);
+            });
+          });
+
+          li.appendChild(btn);
+          listEl.appendChild(li);
+        });
+      }
+
+      function applyState() {
+        // dark mode
+        document.body.setAttribute('data-dark', state.dark);
+
+        var weightToken = WEIGHTS.find(function (w) { return w.value === state.weight; }).token;
+        var lhToken = LINE_HEIGHTS.find(function (l) { return l.value === state.lineHeight; }).token;
+
+        var samples = document.querySelectorAll('[data-sample-for]');
+        samples.forEach(function (s) {
+          s.style.setProperty('font-weight', 'var(' + weightToken + ')');
+          s.style.setProperty('line-height', 'var(' + lhToken + ')');
+        });
+
+        updateComputedSizes();
+      }
+
+      function updateComputedSizes() {
+        SIZES.forEach(function (size) {
+          var sample = document.querySelector('[data-sample-for="' + size.key + '"]');
+          var pxEl = document.querySelector('[data-px-for="' + size.key + '"]');
+          if (!sample || !pxEl) return;
+          var resolved = window.getComputedStyle(sample).fontSize;
+          var num = parseFloat(resolved);
+          if (!isNaN(num)) {
+            pxEl.textContent = Math.round(num * 100) / 100 + ' px';
+          } else {
+            pxEl.textContent = resolved;
+          }
+        });
+      }
+
+      // init chip groups
+      var weightContainer = document.querySelector('[data-control="weight"]');
+      buildChipGroup(weightContainer, WEIGHTS, 'weight');
+
+      var lhContainer = document.querySelector('[data-control="lineHeight"]');
+      buildChipGroup(lhContainer, LINE_HEIGHTS, 'lineHeight');
+
+      var darkContainer = document.querySelector('[data-control="dark"]');
+      var darkChips = darkContainer.querySelectorAll('.chip');
+      darkChips.forEach(function (chip) {
+        chip.addEventListener('click', function () {
+          state.dark = chip.getAttribute('data-value');
+          updateChipGroup(darkContainer, 'dark');
+          applyState();
+        });
+      });
+
+      buildList();
+      applyState();
+
+      // Recompute on resize (rem-based tokens may change)
+      window.addEventListener('resize', updateComputedSizes);
+    }());
+  </script>
+
+</body>
+</html>

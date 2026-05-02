@@ -4,6 +4,9 @@ node_modules/
 .claude/settings.local.json
 .claude/ralph-loop.local.md
 .claude/worktrees/
+.claude/launch.json
+.vdx-decisions/
+.playwright-mcp/
 coverage/
 dist/
 *.tsbuildinfo

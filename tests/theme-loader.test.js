@@ -21,7 +21,7 @@ const minimalValid = {
     neutral: { "0": "#FFFFFF", "50": "#FAFAFA", "100": "#F5F5F5", "200": "#EEEEEE", "300": "#DDDDDD", "500": "#767676", "700": "#3F3F3F", "900": "#1A1A1A", "1000": "#000000" },
     semantic: { success: "#00A96E", warning: "#F2A100", danger: "#E12832", info: "#1428A0" },
     surface: { page: "#FFFFFF", card: "#FFFFFF", elevated: "#FAFAFA", inverse: "#000000" },
-    text: { primary: "#1A1A1A", secondary: "#3F3F3F", muted: "#767676", onBrand: "#FFFFFF", onInverse: "#FFFFFF" },
+    text: { primary: "#1A1A1A", secondary: "#3F3F3F", muted: "#767676", onBrand: "#FFFFFF", onInverse: "#FFFFFF", onInverseSecondary: "#CCCCCC" },
     border: { subtle: "#EEEEEE", default: "#DDDDDD", strong: "#1A1A1A", inverse: "#3F3F3F" },
   },
   typography: {

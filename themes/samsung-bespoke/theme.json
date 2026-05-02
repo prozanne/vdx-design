@@ -1,0 +1,181 @@
+{
+  "id": "samsung-bespoke",
+  "name": "Samsung Bespoke",
+  "version": "1.0.0",
+  "description": "Pastel-palette lifestyle theme inspired by Samsung Bespoke home appliances. Softer chrome, larger radii, and warmer neutrals than samsung-kr while staying within the same token tree.",
+  "defaultLang": "ko",
+  "colors": {
+    "brand": {
+      "primary": "#2C2A28",
+      "primaryHover": "#444140",
+      "secondary": "#A88B6E",
+      "accent": "#D89C80"
+    },
+    "neutral": {
+      "0": "#FFFFFF",
+      "50": "#FBF8F5",
+      "100": "#F4EFE8",
+      "200": "#E8DFD3",
+      "300": "#D4C7B5",
+      "500": "#8C7E6E",
+      "700": "#5C5147",
+      "900": "#2C2A28",
+      "1000": "#000000"
+    },
+    "semantic": {
+      "success": "#5E8B6B",
+      "warning": "#C7894A",
+      "danger": "#B65151",
+      "info": "#6F86A8"
+    },
+    "surface": {
+      "page": "#FBF8F5",
+      "card": "#FFFFFF",
+      "elevated": "#F4EFE8",
+      "inverse": "#2C2A28"
+    },
+    "text": {
+      "primary": "#2C2A28",
+      "secondary": "#5C5147",
+      "muted": "#8C7E6E",
+      "onBrand": "#FBF8F5",
+      "onInverse": "#FBF8F5",
+      "onInverseSecondary": "#D4C7B5"
+    },
+    "border": {
+      "subtle": "#E8DFD3",
+      "default": "#D4C7B5",
+      "strong": "#2C2A28",
+      "inverse": "#5C5147"
+    },
+    "swatch": {
+      "sage": "#A8B5A0",
+      "rose": "#D9B3A8",
+      "linen": "#E8DFD3",
+      "navy": "#3F4A5C"
+    }
+  },
+  "typography": {
+    "fontFamily": {
+      "sans": "\"SamsungOne\", \"Pretendard\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", -apple-system, BlinkMacSystemFont, \"Helvetica Neue\", Arial, sans-serif",
+      "display": "\"Cormorant Garamond\", \"Nanum Myeongjo\", Georgia, \"Apple SD Gothic Neo\", \"Noto Serif KR\", serif",
+      "mono": "\"SF Mono\", Menlo, Consolas, \"Courier New\", monospace"
+    },
+    "fontSize": {
+      "caption": "12px",
+      "bodyS": "14px",
+      "bodyM": "16px",
+      "bodyL": "18px",
+      "h4": "20px",
+      "h3": "26px",
+      "h2": "36px",
+      "h1": "44px",
+      "displayM": "52px",
+      "displayL": "68px",
+      "displayXL": "88px"
+    },
+    "lineHeight": {
+      "tight": "1.15",
+      "normal": "1.55",
+      "relaxed": "1.8"
+    },
+    "fontWeight": {
+      "regular": "400",
+      "medium": "500",
+      "semibold": "500",
+      "bold": "600"
+    },
+    "letterSpacing": {
+      "tight": "-0.01em",
+      "normal": "0",
+      "wide": "0.06em"
+    }
+  },
+  "spacing": {
+    "0": "0",
+    "1": "4px",
+    "2": "8px",
+    "3": "12px",
+    "4": "16px",
+    "5": "20px",
+    "6": "24px",
+    "8": "32px",
+    "10": "40px",
+    "12": "48px",
+    "16": "64px",
+    "20": "80px",
+    "24": "96px"
+  },
+  "radius": {
+    "none": "0",
+    "sm": "8px",
+    "md": "16px",
+    "lg": "24px",
+    "pill": "999px"
+  },
+  "shadow": {
+    "none": "none",
+    "sm": "0 2px 8px rgba(44, 42, 40, 0.05)",
+    "md": "0 8px 24px rgba(44, 42, 40, 0.08)",
+    "lg": "0 16px 48px rgba(44, 42, 40, 0.12)"
+  },
+  "motion": {
+    "duration": {
+      "fast": "180ms",
+      "base": "320ms",
+      "slow": "560ms"
+    },
+    "easing": {
+      "standard": "cubic-bezier(0.25, 0.1, 0.25, 1)",
+      "emphasized": "cubic-bezier(0.4, 0, 0.2, 1)"
+    }
+  },
+  "breakpoints": {
+    "mobile": "360px",
+    "tablet": "768px",
+    "laptop": "1024px",
+    "desktop": "1440px",
+    "xl": "1920px"
+  },
+  "layout": {
+    "narrow": "680px",
+    "content": "1200px",
+    "wide": "1440px"
+  },
+  "zIndex": {
+    "base": "0",
+    "raised": "1",
+    "sticky": "100",
+    "dropdown": "200",
+    "modal": "1000",
+    "toast": "1100"
+  },
+  "components": {
+    "button": {
+      "height": "52px",
+      "paddingX": "36px",
+      "radius": "999px",
+      "fontWeight": "500"
+    },
+    "input": {
+      "height": "52px",
+      "paddingX": "20px",
+      "radius": "16px",
+      "borderColor": "#D4C7B5"
+    },
+    "card": {
+      "padding": "32px",
+      "radius": "24px",
+      "shadow": "0 2px 8px rgba(44, 42, 40, 0.05)"
+    },
+    "nav": {
+      "height": "72px",
+      "background": "#FBF8F5",
+      "color": "#2C2A28"
+    },
+    "footer": {
+      "background": "#2C2A28",
+      "color": "#D4C7B5"
+    }
+  }
+}

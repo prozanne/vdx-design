@@ -38,7 +38,8 @@
       "secondary": "#3F3F46",
       "muted": "#71717A",
       "onBrand": "#FFFFFF",
-      "onInverse": "#FFFFFF"
+      "onInverse": "#FFFFFF",
+      "onInverseSecondary": "#CCCCCC"
     },
     "border": {
       "subtle": "#E4E4E7",

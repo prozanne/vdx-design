@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Product Card · A/B 플레이그라운드 — samsung-kr</title>
+  <link rel="stylesheet" href="../tokens.css">
+  <link rel="stylesheet" href="../components.css">
+  <style>
+    /* ----- Page chrome ----- */
+    body {
+      font-family: var(--vdx-typography-font-family-sans);
+      background: var(--vdx-colors-surface-page);
+      color: var(--vdx-colors-text-primary);
+      margin: 0;
+      padding: var(--vdx-spacing-8);
+      line-height: var(--vdx-typography-line-height-normal);
+    }
+    .pg-shell {
+      max-width: var(--vdx-layout-content);
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: var(--vdx-spacing-8);
+    }
+    .pg-title {
+      font-family: var(--vdx-typography-font-family-display);
+      font-size: var(--vdx-typography-font-size-h2);
+      letter-spacing: var(--vdx-typography-letter-spacing-tight);
+      margin: 0;
+    }
+    .pg-subtitle {
+      color: var(--vdx-colors-text-muted);
+      font-size: var(--vdx-typography-font-size-body-s);
+      margin: 0;
+    }
+
+    /* ----- Controls bar ----- */
+    .pg-controls {
+      background: var(--vdx-colors-surface-elevated);
+      border: 1px solid var(--vdx-colors-border-subtle);
+      border-radius: var(--vdx-radius-md);
+      padding: var(--vdx-spacing-6);
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--vdx-spacing-8);
+      align-items: flex-start;
+    }
+    .pg-group {
+      display: flex;
+      flex-direction: column;
+      gap: var(--vdx-spacing-2);
+      min-width: var(--vdx-spacing-24);
+    }
+    .pg-label {
+      font-size: var(--vdx-typography-font-size-caption);
+      font-weight: var(--vdx-typography-font-weight-semibold);
+      letter-spacing: var(--vdx-typography-letter-spacing-wide);
+      text-transform: uppercase;
+      color: var(--vdx-colors-text-secondary);
+    }
+    .pg-segmented {
+      display: inline-flex;
+      border: 1px solid var(--vdx-colors-border-default);
+      border-radius: var(--vdx-radius-pill);
+      overflow: hidden;
+      background: var(--vdx-colors-surface-card);
+    }
+    .pg-segmented label {
+      padding: var(--vdx-spacing-2) var(--vdx-spacing-5);
+      font-size: var(--vdx-typography-font-size-body-s);
+      cursor: pointer;
+      color: var(--vdx-colors-text-secondary);
+      transition: background var(--vdx-motion-duration-fast) var(--vdx-motion-easing-standard),
+                  color var(--vdx-motion-duration-fast) var(--vdx-motion-easing-standard);
+    }
+    .pg-segmented input { position: absolute; opacity: 0; pointer-events: none; }
+    .pg-segmented input:checked + span {
+      background: var(--vdx-colors-brand-primary);
+      color: var(--vdx-colors-text-on-brand);
+    }
+    .pg-segmented label > span {
+      display: inline-block;
+      padding: var(--vdx-spacing-2) var(--vdx-spacing-5);
+      border-radius: var(--vdx-radius-pill);
+    }
+    .pg-segmented label { padding: 0; }
+    .pg-segmented input:focus-visible + span {
+      outline: 2px solid var(--vdx-colors-brand-accent);
+      outline-offset: 2px;
+    }
+
+    .pg-spacer { flex: 1; }
+    .pg-meta {
+      display: flex;
+      flex-direction: column;
+      gap: var(--vdx-spacing-1);
+      align-items: flex-end;
+      font-size: var(--vdx-typography-font-size-body-s);
+      color: var(--vdx-colors-text-muted);
+    }
+    .pg-meta strong {
+      color: var(--vdx-colors-text-primary);
+      font-weight: var(--vdx-typography-font-weight-semibold);
+    }
+
+    /* ----- Stage ----- */
+    .pg-stage {
+      background: var(--vdx-colors-surface-card);
+      border: 1px solid var(--vdx-colors-border-subtle);
+      border-radius: var(--vdx-radius-md);
+      padding: var(--vdx-spacing-8);
+    }
+
+    .pg-grid {
+      display: grid;
+      gap: var(--vdx-spacing-6);
+    }
+    .pg-grid[data-cols="2"] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .pg-grid[data-cols="3"] { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .pg-grid[data-cols="4"] { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .pg-grid[data-cols="1"] { grid-template-columns: minmax(0, 1fr); }
+
+    @media (max-width: 720px) {
+      .pg-grid { grid-template-columns: minmax(0, 1fr) !important; }
+      .pg-controls { flex-direction: column; align-items: stretch; }
+      .pg-meta { align-items: flex-start; }
+      body { padding: var(--vdx-spacing-4); }
+    }
+
+    /* ----- Variant: minimal (A) — relies on existing .product-card ----- */
+    .variant-a .pc-meta-row,
+    .variant-a .pc-swatches,
+    .variant-a .pc-cta,
+    .variant-a .pc-spec,
+    .variant-a .pc-badge,
+    .variant-a .pc-price-old { display: none; }
+
+    /* ----- Variant: feature-rich (B) ----- */
+    .variant-b .image { position: relative; }
+    .variant-b .pc-badge {
+      position: absolute;
+      top: var(--vdx-spacing-3);
+      left: var(--vdx-spacing-3);
+    }
+    .variant-b .pc-spec {
+      font-size: var(--vdx-typography-font-size-body-s);
+      color: var(--vdx-colors-text-muted);
+      margin: 0;
+    }
+    .variant-b .pc-price-row {
+      display: flex;
+      align-items: baseline;
+      gap: var(--vdx-spacing-2);
+    }
+    .variant-b .pc-swatches {
+      display: flex;
+      gap: var(--vdx-spacing-2);
+      margin-top: var(--vdx-spacing-2);
+    }
+    .pc-swatch {
+      width: var(--vdx-spacing-6);
+      height: var(--vdx-spacing-6);
+      border-radius: var(--vdx-radius-pill);
+      border: 1px solid var(--vdx-colors-border-default);
+      display: inline-block;
+    }
+    .pc-swatch-black { background: var(--vdx-colors-swatch-black); }
+    .pc-swatch-blue  { background: var(--vdx-colors-swatch-blue); }
+    .pc-swatch-mint  { background: var(--vdx-colors-swatch-mint); }
+    .pc-swatch-pink  { background: var(--vdx-colors-swatch-pink); }
+    .variant-b .pc-cta { margin-top: var(--vdx-spacing-3); }
+
+    /* ----- Variant: compact horizontal (C) ----- */
+    .variant-c.product-card {
+      flex-direction: row;
+      align-items: stretch;
+    }
+    .variant-c .image {
+      width: var(--vdx-spacing-24);
+      flex: 0 0 auto;
+      aspect-ratio: 1 / 1;
+      padding: var(--vdx-spacing-4);
+    }
+    .variant-c .body {
+      padding: var(--vdx-spacing-5);
+      gap: var(--vdx-spacing-1);
+    }
+    .variant-c .name { font-size: var(--vdx-typography-font-size-body-l); }
+    .variant-c .pc-spec {
+      font-size: var(--vdx-typography-font-size-body-s);
+      color: var(--vdx-colors-text-muted);
+      margin: 0;
+    }
+    .variant-c .pc-cta {
+      align-self: flex-start;
+      margin-top: var(--vdx-spacing-2);
+    }
+
+    /* ----- Hover-effect toggle: when off, nuke transform/shadow ----- */
+    .pg-stage[data-hover="off"] .product-card { transition: none !important; }
+    .pg-stage[data-hover="off"] .product-card:hover {
+      box-shadow: none !important;
+      transform: none !important;
+    }
+    .pg-stage[data-hover="on"] .product-card:hover {
+      transform: translateY(calc(-1 * var(--vdx-spacing-1)));
+    }
+
+    /* ----- Snippet copy bar (per-card hover) ----- */
+    .pc-wrap { position: relative; }
+    .pc-copy {
+      position: absolute;
+      top: var(--vdx-spacing-3);
+      right: var(--vdx-spacing-3);
+      z-index: var(--vdx-z-index-raised);
+      opacity: 0;
+      transition: opacity var(--vdx-motion-duration-fast) var(--vdx-motion-easing-standard);
+    }
+    .pc-wrap:hover .pc-copy,
+    .pc-wrap:focus-within .pc-copy { opacity: 1; }
+
+    .pg-toast {
+      position: fixed;
+      bottom: var(--vdx-spacing-8);
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--vdx-colors-surface-inverse);
+      color: var(--vdx-colors-text-on-inverse);
+      padding: var(--vdx-spacing-3) var(--vdx-spacing-6);
+      border-radius: var(--vdx-radius-pill);
+      font-size: var(--vdx-typography-font-size-body-s);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--vdx-motion-duration-base) var(--vdx-motion-easing-standard);
+      z-index: var(--vdx-z-index-toast);
+    }
+    .pg-toast[data-on="1"] { opacity: 1; }
+  </style>
+</head>
+<body>
+  <div class="pg-shell">
+    <header>
+      <h1 class="pg-title">Product Card · A/B 플레이그라운드</h1>
+      <p class="pg-subtitle">samsung-kr 테마의 카드 변형을 비교하고, 스니펫을 복사하세요.</p>
+    </header>
+
+    <section class="pg-controls" aria-label="플레이그라운드 컨트롤">
+      <div class="pg-group">
+        <span class="pg-label">카드 스타일</span>
+        <div class="pg-segmented" role="radiogroup" aria-label="카드 스타일">
+          <label><input type="radio" name="variant" value="a" checked><span>A · 미니멀</span></label>
+          <label><input type="radio" name="variant" value="b"><span>B · 풍부</span></label>
+          <label><input type="radio" name="variant" value="c"><span>C · 컴팩트</span></label>
+        </div>
+      </div>
+
+      <div class="pg-group">
+        <span class="pg-label">그리드 컬럼</span>
+        <div class="pg-segmented" role="radiogroup" aria-label="그리드 컬럼">
+          <label><input type="radio" name="cols" value="2"><span>2</span></label>
+          <label><input type="radio" name="cols" value="3" checked><span>3</span></label>
+          <label><input type="radio" name="cols" value="4"><span>4</span></label>
+        </div>
+      </div>
+
+      <div class="pg-group">
+        <span class="pg-label">호버 효과</span>
+        <div class="pg-segmented" role="radiogroup" aria-label="호버 효과">
+          <label><input type="radio" name="hover" value="on" checked><span>켜기</span></label>
+          <label><input type="radio" name="hover" value="off"><span>끄기</span></label>
+        </div>
+      </div>
+
+      <div class="pg-spacer"></div>
+
+      <div class="pg-meta" aria-live="polite">
+        <span>선택한 컬럼: <strong id="meta-cols">3</strong></span>
+        <span id="meta-mobile-note">모바일(720px↓)에서는 1열로 표시됩니다.</span>
+      </div>
+    </section>
+
+    <section class="pg-stage" id="stage" data-hover="on" aria-label="카드 미리보기">
+      <div class="pg-grid" id="grid" data-cols="3"></div>
+    </section>
+  </div>
+
+  <div class="pg-toast" id="toast" role="status" aria-live="polite">스니펫이 복사되었습니다</div>
+
+  <script>
+    // ---- Sample products ----
+    const products = [
+      { name: "Galaxy Z Flip6",      spec: "256GB · 그라파이트", price: "1,499,000원", priceOld: "1,649,000원", badge: { text: "신상", cls: "badge-new" },   img: "Z+Flip6" },
+      { name: "Galaxy S25 Ultra",    spec: "512GB · 티타늄 블랙", price: "1,899,000원", priceOld: "2,049,000원", badge: { text: "할인", cls: "badge-promo" }, img: "S25+Ultra" },
+      { name: "Galaxy Buds3 Pro",    spec: "노이즈 캔슬링 · 화이트", price: "299,000원",   priceOld: "329,000원",   badge: { text: "신상", cls: "badge-new" },   img: "Buds3+Pro" },
+      { name: "Galaxy Watch7",       spec: "44mm · 실버",         price: "399,000원",   priceOld: "439,000원",   badge: { text: "할인", cls: "badge-promo" }, img: "Watch7" },
+      { name: "Galaxy Tab S10+",     spec: "256GB · 그라파이트", price: "1,099,000원", priceOld: "1,199,000원", badge: { text: "신상", cls: "badge-new" },   img: "Tab+S10" },
+      { name: "Galaxy Book4 Pro",    spec: "16인치 · 문 그레이",   price: "2,299,000원", priceOld: "2,499,000원", badge: { text: "할인", cls: "badge-promo" }, img: "Book4+Pro" }
+    ];
+
+    const SWATCHES = ["pc-swatch-black", "pc-swatch-blue", "pc-swatch-mint", "pc-swatch-pink"];
+
+    function imgUrl(label) {
+      return `https://placehold.co/400x400/F5F5F5/1A1A1A?text=${label}`;
+    }
+
+    // ---- Renderers ----
+    function renderA(p) {
+      return `
+<article class="product-card variant-a">
+  <div class="image"><img src="${imgUrl(p.img)}" alt="${p.name}"></div>
+  <div class="body">
+    <div class="name">${p.name}</div>
+    <div class="price">${p.price}</div>
+  </div>
+</article>`.trim();
+    }
+
+    function renderB(p) {
+      const swatches = SWATCHES.map(s => `<span class="pc-swatch ${s}" aria-label="색상"></span>`).join("");
+      return `
+<article class="product-card variant-b">
+  <div class="image">
+    <span class="badge ${p.badge.cls} pc-badge">${p.badge.text}</span>
+    <img src="${imgUrl(p.img)}" alt="${p.name}">
+  </div>
+  <div class="body">
+    <div class="name">${p.name}</div>
+    <p class="pc-spec">${p.spec}</p>
+    <div class="pc-price-row">
+      <span class="price-old">${p.priceOld}</span>
+      <span class="price">${p.price}</span>
+    </div>
+    <div class="pc-swatches" aria-label="색상 선택">${swatches}</div>
+    <button type="button" class="btn btn-primary btn-sm pc-cta">장바구니</button>
+  </div>
+</article>`.trim();
+    }
+
+    function renderC(p) {
+      return `
+<article class="product-card variant-c">
+  <div class="image"><img src="${imgUrl(p.img)}" alt="${p.name}"></div>
+  <div class="body">
+    <div class="name">${p.name}</div>
+    <p class="pc-spec">${p.spec}</p>
+    <div class="price">${p.price}</div>
+    <button type="button" class="btn btn-secondary btn-sm pc-cta">자세히 보기</button>
+  </div>
+</article>`.trim();
+    }
+
+    const RENDERERS = { a: renderA, b: renderB, c: renderC };
+
+    // ---- State ----
+    const state = { variant: "a", cols: "3", hover: "on" };
+    const grid = document.getElementById("grid");
+    const stage = document.getElementById("stage");
+    const metaCols = document.getElementById("meta-cols");
+    const toast = document.getElementById("toast");
+
+    function render() {
+      const renderer = RENDERERS[state.variant];
+      grid.innerHTML = products.map((p, i) => `
+        <div class="pc-wrap">
+          <button type="button" class="btn btn-ghost btn-sm pc-copy" data-idx="${i}" aria-label="스니펫 복사">스니펫 복사</button>
+          ${renderer(p)}
+        </div>
+      `).join("");
+
+      const cols = state.variant === "c" ? "1" : state.cols;
+      grid.setAttribute("data-cols", cols);
+      stage.setAttribute("data-hover", state.hover);
+      metaCols.textContent = state.variant === "c" ? "1 (컴팩트 고정)" : state.cols;
+    }
+
+    // ---- Events ----
+    document.querySelectorAll('input[name="variant"]').forEach(el => {
+      el.addEventListener("change", () => { state.variant = el.value; render(); });
+    });
+    document.querySelectorAll('input[name="cols"]').forEach(el => {
+      el.addEventListener("change", () => { state.cols = el.value; render(); });
+    });
+    document.querySelectorAll('input[name="hover"]').forEach(el => {
+      el.addEventListener("change", () => { state.hover = el.value; render(); });
+    });
+
+    grid.addEventListener("click", async (e) => {
+      const btn = e.target.closest(".pc-copy");
+      if (!btn) return;
+      const idx = Number(btn.dataset.idx);
+      const renderer = RENDERERS[state.variant];
+      const snippet = renderer(products[idx]);
+      try {
+        await navigator.clipboard.writeText(snippet);
+        showToast("스니펫이 복사되었습니다");
+      } catch (err) {
+        // Fallback
+        const ta = document.createElement("textarea");
+        ta.value = snippet;
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand("copy"); showToast("스니펫이 복사되었습니다"); }
+        catch (_) { showToast("복사 실패 — 콘솔에 출력되었습니다"); console.log(snippet); }
+        ta.remove();
+      }
+    });
+
+    let toastTimer;
+    function showToast(msg) {
+      toast.textContent = msg;
+      toast.setAttribute("data-on", "1");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.removeAttribute("data-on"), 1800);
+    }
+
+    render();
+  </script>
+</body>
+</html>

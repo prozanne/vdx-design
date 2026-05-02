@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Galaxy S26 — Samsung Korea</title>
+  <link rel="stylesheet" href="../tokens.css">
+  <link rel="stylesheet" href="../components.css">
+  <style>
+    /* Page-local hero illustration. Token-only values; the SKU-style accents
+     * (radial gradient using brand.secondary) are referenced through CSS vars. */
+    .s26-hero {
+      background:
+        radial-gradient(circle at 80% 30%, color-mix(in srgb, var(--vdx-colors-brand-secondary) 18%, transparent) 0%, transparent 60%),
+        var(--vdx-colors-surface-elevated);
+    }
+    .s26-keyfeatures {
+      background: var(--vdx-colors-neutral-50);
+    }
+    .feature-stat {
+      font-family: var(--vdx-typography-font-family-display);
+      font-weight: 700;
+      font-size: var(--vdx-typography-font-size-display-m);
+      letter-spacing: var(--vdx-typography-letter-spacing-tight);
+      line-height: var(--vdx-typography-line-height-tight);
+      color: var(--vdx-colors-brand-primary);
+    }
+    .feature-stat-unit {
+      font-size: var(--vdx-typography-font-size-h4);
+      color: var(--vdx-colors-text-muted);
+      font-weight: 500;
+      margin-left: var(--vdx-spacing-1);
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav-bar" aria-label="주요 메뉴">
+    <div class="container-wide">
+      <a class="nav-brand" href="/" aria-label="Samsung 홈">SAMSUNG</a>
+      <ul class="nav-links">
+        <li><a href="#">스마트폰</a></li>
+        <li><a href="#">TV/AV</a></li>
+        <li><a href="#">생활가전</a></li>
+        <li><a href="#">컴퓨터</a></li>
+        <li><a href="#">액세서리</a></li>
+      </ul>
+      <div class="nav-actions">
+        <a class="btn btn-ghost btn-sm" href="#">검색</a>
+        <a class="btn btn-primary btn-sm" href="#">로그인</a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+
+    <section class="hero s26-hero">
+      <div class="container-wide">
+        <div class="hero-content">
+          <div class="hero-eyebrow">Galaxy S26 Ultra</div>
+          <h1 class="display-xl">Galaxy AI를<br>한 손에.</h1>
+          <p>차세대 NPU와 200MP 카메라가 만나, 가장 똑똑한 Galaxy가 도착했습니다.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary btn-lg" href="#">사전예약 하기</a>
+            <a class="btn btn-secondary btn-lg" href="#">스펙 살펴보기</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <h2 class="text-center mb-12">한눈에 보는 핵심 사양</h2>
+        <div class="grid grid-4">
+          <div class="card card-flat text-center">
+            <div class="feature-stat">200<span class="feature-stat-unit">MP</span></div>
+            <p class="caption mt-4">메인 카메라 해상도</p>
+          </div>
+          <div class="card card-flat text-center">
+            <div class="feature-stat">120<span class="feature-stat-unit">Hz</span></div>
+            <p class="caption mt-4">가변 주사율</p>
+          </div>
+          <div class="card card-flat text-center">
+            <div class="feature-stat">1<span class="feature-stat-unit">TB</span></div>
+            <p class="caption mt-4">최대 저장 용량</p>
+          </div>
+          <div class="card card-flat text-center">
+            <div class="feature-stat">5,000<span class="feature-stat-unit">mAh</span></div>
+            <p class="caption mt-4">배터리 용량</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section surface-inverse">
+      <div class="container">
+        <div class="grid grid-2 gap-8 items-center">
+          <div>
+            <div class="hero-eyebrow">Galaxy AI</div>
+            <h2 class="display-m mt-4">생각하는 속도로,<br>창작하세요.</h2>
+            <p class="body-l mt-8">실시간 통역, 사진 편집, 음성 메모 요약까지 — Galaxy S26은 일상의 모든 순간에 AI를 더합니다.</p>
+            <a class="btn btn-accent btn-lg mt-8" href="#">AI 기능 알아보기</a>
+          </div>
+          <div class="card-flat" style="aspect-ratio: 4 / 3; background: var(--vdx-colors-neutral-900); border-radius: var(--vdx-radius-md); display: flex; align-items: center; justify-content: center;">
+            <span style="color: var(--vdx-colors-text-on-inverse-secondary); font-family: var(--vdx-typography-font-family-display); font-size: var(--vdx-typography-font-size-display-l);">AI</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section s26-keyfeatures">
+      <div class="container">
+        <h2 class="text-center mb-12">왜 S26 인가요?</h2>
+        <div class="grid grid-3">
+          <div class="card">
+            <div class="caption">01</div>
+            <h3>Snapdragon X Gen 4</h3>
+            <p class="text-muted">전 세대 대비 NPU 성능 45% 향상.</p>
+          </div>
+          <div class="card">
+            <div class="caption">02</div>
+            <h3>200MP 광학</h3>
+            <p class="text-muted">10배 광학줌 + 100배 디지털줌, 야간 모드 강화.</p>
+          </div>
+          <div class="card">
+            <div class="caption">03</div>
+            <h3>티타늄 프레임</h3>
+            <p class="text-muted">더 가볍고, 더 단단해진 인체공학적 그립.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container-narrow">
+        <div class="card">
+          <span class="badge badge-new">사전예약</span>
+          <h3 class="mt-4">출시 알림 받기</h3>
+          <p class="text-muted mb-8">출시 일정과 사전예약 혜택을 가장 먼저 받아보세요.</p>
+          <label class="label" for="email">이메일</label>
+          <input id="email" class="input" type="email" placeholder="you@example.com">
+          <a class="btn btn-primary mt-8" href="#">알림 신청하기</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container-wide">
+      <div class="footer-bottom">
+        <span>© 2026 Samsung Electronics Co., Ltd.</span>
+        <span>대한민국 / 한국어</span>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

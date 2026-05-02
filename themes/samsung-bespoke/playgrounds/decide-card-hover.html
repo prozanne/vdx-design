@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>결정: 카드 호버 효과</title>
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="../components.css">
+<style>
+  :root { color-scheme: light; }
+  body {
+    font-family: var(--vdx-typography-font-family-base);
+    background: var(--vdx-colors-surface-page);
+    color: var(--vdx-colors-text-primary);
+    margin: 0;
+    padding: var(--vdx-spacing-8);
+  }
+  .header {
+    max-width: var(--vdx-layout-content);
+    margin: 0 auto var(--vdx-spacing-8);
+    text-align: center;
+  }
+  .header h1 {
+    font-size: var(--vdx-typography-font-size-h2);
+    font-weight: var(--vdx-typography-font-weight-bold);
+    margin: 0 0 var(--vdx-spacing-2);
+  }
+  .header p {
+    font-size: var(--vdx-typography-font-size-body-l);
+    color: var(--vdx-colors-text-secondary);
+    margin: 0;
+  }
+  .compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--vdx-spacing-6);
+    max-width: var(--vdx-layout-wide);
+    margin: 0 auto;
+  }
+  @media (max-width: 720px) {
+    .compare { grid-template-columns: 1fr; }
+  }
+  .option {
+    background: var(--vdx-colors-surface-card);
+    border: var(--vdx-spacing-0) solid var(--vdx-colors-border-default);
+    border-width: 1px;
+    border-radius: var(--vdx-radius-lg);
+    padding: var(--vdx-spacing-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--vdx-spacing-4);
+  }
+  .option__label {
+    display: flex;
+    align-items: center;
+    gap: var(--vdx-spacing-2);
+    font-size: var(--vdx-typography-font-size-h4);
+    font-weight: var(--vdx-typography-font-weight-semibold);
+    margin: 0;
+  }
+  .option__badge {
+    font-size: var(--vdx-typography-font-size-caption);
+    padding: var(--vdx-spacing-1) var(--vdx-spacing-2);
+    border-radius: var(--vdx-radius-sm);
+    background: var(--vdx-colors-brand-primary);
+    color: var(--vdx-colors-text-on-inverse);
+    font-weight: var(--vdx-typography-font-weight-medium);
+  }
+  .option__desc {
+    font-size: var(--vdx-typography-font-size-body-m);
+    color: var(--vdx-colors-text-secondary);
+    margin: 0;
+    min-height: calc(var(--vdx-spacing-6) * 2);
+  }
+  .preview-area {
+    background: var(--vdx-colors-surface-page);
+    border-radius: var(--vdx-radius-md);
+    padding: var(--vdx-spacing-6);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--vdx-spacing-4);
+  }
+  .demo-card {
+    background: var(--vdx-colors-surface-elevated);
+    border-radius: var(--vdx-radius-md);
+    padding: var(--vdx-spacing-4);
+    box-shadow: var(--vdx-shadow-sm);
+    cursor: default;
+  }
+  .demo-card .img {
+    aspect-ratio: 1 / 1;
+    background: var(--vdx-colors-neutral-100);
+    border-radius: var(--vdx-radius-sm);
+    margin-bottom: var(--vdx-spacing-3);
+  }
+  .demo-card .name {
+    font-size: var(--vdx-typography-font-size-body-m);
+    font-weight: var(--vdx-typography-font-weight-medium);
+    margin: 0 0 var(--vdx-spacing-1);
+  }
+  .demo-card .price {
+    font-size: var(--vdx-typography-font-size-body-s);
+    color: var(--vdx-colors-text-secondary);
+    margin: 0;
+  }
+  .option--a .demo-card {
+    transition: transform var(--vdx-motion-duration-base) var(--vdx-motion-easing-base),
+                box-shadow var(--vdx-motion-duration-base) var(--vdx-motion-easing-base);
+  }
+  @media (hover: hover) {
+    .option--a .demo-card:hover {
+      transform: translateY(calc(-1 * var(--vdx-spacing-1)));
+      box-shadow: var(--vdx-shadow-lg);
+    }
+  }
+  .pick {
+    appearance: none;
+    border: 0;
+    background: var(--vdx-colors-brand-primary);
+    color: var(--vdx-colors-text-on-inverse);
+    font-size: var(--vdx-typography-font-size-body-l);
+    font-weight: var(--vdx-typography-font-weight-medium);
+    padding: var(--vdx-spacing-3) var(--vdx-spacing-6);
+    border-radius: var(--vdx-radius-pill);
+    cursor: pointer;
+    transition: background-color var(--vdx-motion-duration-base) var(--vdx-motion-easing-base);
+  }
+  .pick:focus-visible {
+    outline: 2px solid var(--vdx-colors-brand-accent);
+    outline-offset: 2px;
+  }
+  @media (hover: hover) {
+    .pick:hover { background: var(--vdx-colors-brand-primary-hover); }
+  }
+  .status {
+    max-width: var(--vdx-layout-content);
+    margin: var(--vdx-spacing-8) auto 0;
+    text-align: center;
+    padding: var(--vdx-spacing-4);
+    border-radius: var(--vdx-radius-md);
+    font-size: var(--vdx-typography-font-size-body-l);
+    background: var(--vdx-colors-surface-elevated);
+    color: var(--vdx-colors-text-secondary);
+  }
+  .status[data-state="chosen"] {
+    background: var(--vdx-colors-semantic-success);
+    color: var(--vdx-colors-text-on-inverse);
+    font-weight: var(--vdx-typography-font-weight-semibold);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+    }
+    .option--a .demo-card:hover { transform: none; }
+  }
+</style>
+</head>
+<body>
+  <header class="header">
+    <h1>카드 호버 효과: 어느 쪽이 더 나을까요?</h1>
+    <p>마우스를 카드 위에 올려보고, 더 마음에 드는 쪽을 선택하세요.</p>
+  </header>
+
+  <main class="compare">
+    <section class="option option--a" id="opt-a">
+      <h2 class="option__label">A <span class="option__badge">현재</span></h2>
+      <p class="option__desc">호버 시 카드가 살짝 떠오르며 그림자가 깊어집니다. 인터랙티브한 느낌.</p>
+      <div class="preview-area">
+        <article class="demo-card">
+          <div class="img"></div>
+          <p class="name">Galaxy Z Flip6</p>
+          <p class="price">1,650,000원</p>
+        </article>
+        <article class="demo-card">
+          <div class="img"></div>
+          <p class="name">Galaxy Buds3 Pro</p>
+          <p class="price">329,000원</p>
+        </article>
+      </div>
+      <button class="pick" type="button" data-choice="A">A 선택</button>
+    </section>
+
+    <section class="option option--b" id="opt-b">
+      <h2 class="option__label">B</h2>
+      <p class="option__desc">호버해도 변화 없음. 정적이고 차분한 느낌. 모션 민감 사용자 친화적.</p>
+      <div class="preview-area">
+        <article class="demo-card">
+          <div class="img"></div>
+          <p class="name">Galaxy Z Flip6</p>
+          <p class="price">1,650,000원</p>
+        </article>
+        <article class="demo-card">
+          <div class="img"></div>
+          <p class="name">Galaxy Buds3 Pro</p>
+          <p class="price">329,000원</p>
+        </article>
+      </div>
+      <button class="pick" type="button" data-choice="B">B 선택</button>
+    </section>
+  </main>
+
+  <p class="status" id="status">아직 선택되지 않았습니다 — A 또는 B를 클릭하세요.</p>
+
+<script>
+  const status = document.getElementById('status');
+  document.querySelectorAll('.pick').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const choice = btn.dataset.choice;
+      window.__vdxChoice = choice;
+      window.__vdxChoiceAt = Date.now();
+      status.dataset.state = 'chosen';
+      status.textContent = `✓ ${choice} 선택됨 — Claude가 적용 중입니다...`;
+      document.querySelectorAll('.pick').forEach(b => b.disabled = true);
+      try {
+        await fetch('/__choice', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ choice, decision: 'card-hover' })
+        });
+      } catch (err) {
+        status.textContent = `${choice} 선택 — 서버에 알리지 못함: ${err.message}`;
+      }
+    });
+  });
+</script>
+</body>
+</html>

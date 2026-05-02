@@ -22,7 +22,7 @@ test("loadTheme rejects a value that fails the length pattern", () => {
         neutral: { "0": "#FFF", "50": "#FFF", "100": "#FFF", "200": "#FFF", "300": "#FFF", "500": "#FFF", "700": "#FFF", "900": "#FFF", "1000": "#000" },
         semantic: { success: "#0F0", warning: "#FF0", danger: "#F00", info: "#00F" },
         surface: { page: "#FFF", card: "#FFF", elevated: "#FFF", inverse: "#000" },
-        text: { primary: "#000", secondary: "#000", muted: "#000", onBrand: "#FFF", onInverse: "#FFF" },
+        text: { primary: "#000", secondary: "#000", muted: "#000", onBrand: "#FFF", onInverse: "#FFF", onInverseSecondary: "#CCC" },
         border: { subtle: "#FFF", default: "#FFF", strong: "#000", inverse: "#000" },
       },
       typography: {
@@ -61,7 +61,7 @@ test("loadTheme rejects an invalid font weight", () => {
         neutral: { "0": "#FFF", "50": "#FFF", "100": "#FFF", "200": "#FFF", "300": "#FFF", "500": "#FFF", "700": "#FFF", "900": "#FFF", "1000": "#000" },
         semantic: { success: "#0F0", warning: "#FF0", danger: "#F00", info: "#00F" },
         surface: { page: "#FFF", card: "#FFF", elevated: "#FFF", inverse: "#000" },
-        text: { primary: "#000", secondary: "#000", muted: "#000", onBrand: "#FFF", onInverse: "#FFF" },
+        text: { primary: "#000", secondary: "#000", muted: "#000", onBrand: "#FFF", onInverse: "#FFF", onInverseSecondary: "#CCC" },
         border: { subtle: "#FFF", default: "#FFF", strong: "#000", inverse: "#000" },
       },
       typography: {
@@ -99,7 +99,7 @@ test("loadTheme accepts an optional defaultLang and rejects garbage", () => {
       neutral: { "0": "#FFF", "50": "#FFF", "100": "#FFF", "200": "#FFF", "300": "#FFF", "500": "#FFF", "700": "#FFF", "900": "#FFF", "1000": "#000" },
       semantic: { success: "#0F0", warning: "#FF0", danger: "#F00", info: "#00F" },
       surface: { page: "#FFF", card: "#FFF", elevated: "#FFF", inverse: "#000" },
-      text: { primary: "#000", secondary: "#000", muted: "#000", onBrand: "#FFF", onInverse: "#FFF" },
+      text: { primary: "#000", secondary: "#000", muted: "#000", onBrand: "#FFF", onInverse: "#FFF", onInverseSecondary: "#CCC" },
       border: { subtle: "#FFF", default: "#FFF", strong: "#000", inverse: "#000" },
     },
     typography: {

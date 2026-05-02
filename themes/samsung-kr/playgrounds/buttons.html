@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Buttons Playground · samsung-kr</title>
+  <link rel="stylesheet" href="../tokens.css" />
+  <link rel="stylesheet" href="../components.css" />
+  <style>
+    /* ---------- Playground chrome ----------
+     * All values reference --vdx-* tokens. No literal hex/rgb/px allowed.
+     */
+    body {
+      background: var(--vdx-colors-surface-elevated);
+      min-height: 100vh;
+    }
+
+    .pg-shell {
+      max-width: var(--vdx-layout-content);
+      margin: 0 auto;
+      padding-inline: var(--vdx-spacing-6);
+      padding-block: var(--vdx-spacing-12);
+    }
+
+    .pg-header {
+      margin-bottom: var(--vdx-spacing-8);
+    }
+
+    .pg-header h1 {
+      font-size: var(--vdx-typography-font-size-h2);
+      margin-bottom: var(--vdx-spacing-2);
+    }
+
+    .pg-header p {
+      color: var(--vdx-colors-text-secondary);
+      font-size: var(--vdx-typography-font-size-body-m);
+      margin: 0;
+    }
+
+    .pg-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 320px) minmax(0, 1fr);
+      gap: var(--vdx-spacing-8);
+      align-items: start;
+    }
+
+    /* ---------- Control panel ---------- */
+    .pg-panel {
+      background: var(--vdx-colors-surface-card);
+      border: 1px solid var(--vdx-colors-border-subtle);
+      border-radius: var(--vdx-radius-md);
+      padding: var(--vdx-spacing-6);
+      box-shadow: var(--vdx-shadow-sm);
+    }
+
+    .pg-panel > * + * {
+      margin-top: var(--vdx-spacing-6);
+    }
+
+    .pg-fieldset {
+      border: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .pg-legend {
+      display: block;
+      font-size: var(--vdx-typography-font-size-body-s);
+      font-weight: var(--vdx-typography-font-weight-semibold);
+      letter-spacing: var(--vdx-typography-letter-spacing-wide);
+      text-transform: uppercase;
+      color: var(--vdx-colors-text-secondary);
+      margin-bottom: var(--vdx-spacing-3);
+      padding: 0;
+    }
+
+    .pg-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--vdx-spacing-2);
+    }
+
+    .pg-option {
+      position: relative;
+      display: inline-flex;
+    }
+
+    /* visually hidden but keyboard reachable */
+    .pg-option input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      cursor: pointer;
+    }
+
+    .pg-option .pg-chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding-inline: var(--vdx-spacing-4);
+      padding-block: var(--vdx-spacing-2);
+      border: 1px solid var(--vdx-colors-border-default);
+      border-radius: var(--vdx-radius-pill);
+      background: var(--vdx-colors-surface-card);
+      color: var(--vdx-colors-text-secondary);
+      font-size: var(--vdx-typography-font-size-body-s);
+      font-weight: var(--vdx-typography-font-weight-medium);
+      cursor: pointer;
+      transition:
+        background var(--vdx-motion-duration-fast) var(--vdx-motion-easing-standard),
+        color var(--vdx-motion-duration-fast) var(--vdx-motion-easing-standard),
+        border-color var(--vdx-motion-duration-fast) var(--vdx-motion-easing-standard);
+      user-select: none;
+    }
+
+    .pg-option input[type="radio"]:checked + .pg-chip {
+      background: var(--vdx-colors-brand-primary);
+      color: var(--vdx-colors-text-on-brand);
+      border-color: var(--vdx-colors-brand-primary);
+    }
+
+    .pg-option input[type="radio"]:focus-visible + .pg-chip {
+      outline: 2px solid var(--vdx-colors-brand-accent);
+      outline-offset: 2px;
+    }
+
+    /* ---------- Preview pane ---------- */
+    .pg-stage {
+      background: var(--vdx-colors-surface-card);
+      border: 1px solid var(--vdx-colors-border-subtle);
+      border-radius: var(--vdx-radius-md);
+      box-shadow: var(--vdx-shadow-sm);
+      overflow: hidden;
+    }
+
+    .pg-stage-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--vdx-spacing-4);
+      padding-inline: var(--vdx-spacing-6);
+      padding-block: var(--vdx-spacing-3);
+      border-bottom: 1px solid var(--vdx-colors-border-subtle);
+      background: var(--vdx-colors-surface-elevated);
+    }
+
+    .pg-stage-title {
+      font-size: var(--vdx-typography-font-size-body-s);
+      font-weight: var(--vdx-typography-font-weight-semibold);
+      letter-spacing: var(--vdx-typography-letter-spacing-wide);
+      text-transform: uppercase;
+      color: var(--vdx-colors-text-secondary);
+    }
+
+    .pg-stage-canvas {
+      padding: var(--vdx-spacing-12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: var(--vdx-layout-narrow);
+      max-height: 320px;
+      background:
+        repeating-linear-gradient(
+          45deg,
+          var(--vdx-colors-surface-card) 0,
+          var(--vdx-colors-surface-card) var(--vdx-spacing-3),
+          var(--vdx-colors-surface-elevated) var(--vdx-spacing-3),
+          var(--vdx-colors-surface-elevated) var(--vdx-spacing-6)
+        );
+    }
+
+    .pg-preview-host {
+      width: 100%;
+      max-width: var(--vdx-layout-narrow);
+      display: flex;
+      justify-content: center;
+    }
+
+    .pg-snippet {
+      border-top: 1px solid var(--vdx-colors-border-subtle);
+      padding: var(--vdx-spacing-6);
+      background: var(--vdx-colors-surface-elevated);
+    }
+
+    .pg-snippet-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--vdx-spacing-4);
+      margin-bottom: var(--vdx-spacing-3);
+    }
+
+    .pg-snippet pre {
+      margin: 0;
+      padding: var(--vdx-spacing-4);
+      background: var(--vdx-colors-surface-inverse);
+      color: var(--vdx-colors-text-on-inverse);
+      border-radius: var(--vdx-radius-sm);
+      font-family: var(--vdx-typography-font-family-mono);
+      font-size: var(--vdx-typography-font-size-body-s);
+      line-height: var(--vdx-typography-line-height-normal);
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .pg-copy-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--vdx-spacing-2);
+      padding-inline: var(--vdx-spacing-4);
+      padding-block: var(--vdx-spacing-2);
+      border: 1px solid var(--vdx-colors-border-default);
+      border-radius: var(--vdx-radius-pill);
+      background: var(--vdx-colors-surface-card);
+      color: var(--vdx-colors-text-primary);
+      font-family: inherit;
+      font-size: var(--vdx-typography-font-size-body-s);
+      font-weight: var(--vdx-typography-font-weight-semibold);
+      cursor: pointer;
+      transition:
+        background var(--vdx-motion-duration-fast) var(--vdx-motion-easing-standard),
+        color var(--vdx-motion-duration-fast) var(--vdx-motion-easing-standard),
+        border-color var(--vdx-motion-duration-fast) var(--vdx-motion-easing-standard);
+    }
+
+    @media (hover: hover) {
+      .pg-copy-btn:hover {
+        background: var(--vdx-colors-brand-primary);
+        color: var(--vdx-colors-text-on-brand);
+        border-color: var(--vdx-colors-brand-primary);
+      }
+    }
+
+    .pg-copy-btn:focus-visible {
+      outline: 2px solid var(--vdx-colors-brand-accent);
+      outline-offset: 2px;
+    }
+
+    .pg-copy-btn[data-copied="true"] {
+      background: var(--vdx-colors-semantic-success);
+      color: var(--vdx-colors-text-on-brand);
+      border-color: var(--vdx-colors-semantic-success);
+    }
+
+    /* ---------- Faked button states (gaps in components.css) ---------- */
+    /* No .btn-block / full-width modifier exists in components.css → fake here. */
+    .btn.is-full {
+      width: 100%;
+      max-width: var(--vdx-layout-narrow);
+    }
+
+    /* No .btn-loading class exists in components.css → fake here using a CSS spinner. */
+    .btn.is-loading {
+      position: relative;
+      color: transparent !important;
+      pointer-events: none;
+      cursor: progress;
+    }
+
+    .btn.is-loading::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: var(--vdx-spacing-4);
+      height: var(--vdx-spacing-4);
+      margin-top: calc(var(--vdx-spacing-2) * -1);
+      margin-left: calc(var(--vdx-spacing-2) * -1);
+      border-radius: var(--vdx-radius-pill);
+      border: 2px solid currentColor;
+      border-top-color: transparent;
+      opacity: 0.85;
+      animation: pg-spin var(--vdx-motion-duration-slow) linear infinite;
+      color: var(--vdx-colors-text-on-brand);
+    }
+
+    .btn-secondary.is-loading::after,
+    .btn-ghost.is-loading::after {
+      color: var(--vdx-colors-text-primary);
+    }
+
+    @keyframes pg-spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ---------- Responsive: stack under 720px ---------- */
+    @media (max-width: 720px) {
+      .pg-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .pg-stage-canvas {
+        padding: var(--vdx-spacing-8);
+        min-height: auto;
+      }
+
+      .pg-shell {
+        padding-block: var(--vdx-spacing-8);
+      }
+    }
+
+    /* ---------- Reduced motion ---------- */
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+      }
+
+      .btn.is-loading::after {
+        animation: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="pg-shell">
+    <header class="pg-header">
+      <h1>Buttons</h1>
+      <p>samsung-kr 테마의 버튼 변형을 인터랙티브하게 미리 보고 스니펫을 복사하세요.</p>
+    </header>
+
+    <div class="pg-grid">
+      <!-- Left panel: controls -->
+      <aside class="pg-panel" aria-label="Button controls">
+        <fieldset class="pg-fieldset" data-group="variant">
+          <legend class="pg-legend">변형 (Variant)</legend>
+          <div class="pg-options" role="radiogroup">
+            <label class="pg-option">
+              <input type="radio" name="variant" value="primary" checked />
+              <span class="pg-chip">Primary</span>
+            </label>
+            <label class="pg-option">
+              <input type="radio" name="variant" value="secondary" />
+              <span class="pg-chip">Secondary</span>
+            </label>
+            <label class="pg-option">
+              <input type="radio" name="variant" value="ghost" />
+              <span class="pg-chip">Ghost</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset class="pg-fieldset" data-group="size">
+          <legend class="pg-legend">크기 (Size)</legend>
+          <div class="pg-options" role="radiogroup">
+            <label class="pg-option">
+              <input type="radio" name="size" value="lg" />
+              <span class="pg-chip">Large</span>
+            </label>
+            <label class="pg-option">
+              <input type="radio" name="size" value="default" checked />
+              <span class="pg-chip">Default</span>
+            </label>
+            <label class="pg-option">
+              <input type="radio" name="size" value="sm" />
+              <span class="pg-chip">Small</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset class="pg-fieldset" data-group="state">
+          <legend class="pg-legend">상태 (State)</legend>
+          <div class="pg-options" role="radiogroup">
+            <label class="pg-option">
+              <input type="radio" name="state" value="default" checked />
+              <span class="pg-chip">Default</span>
+            </label>
+            <label class="pg-option">
+              <input type="radio" name="state" value="disabled" />
+              <span class="pg-chip">Disabled</span>
+            </label>
+            <label class="pg-option">
+              <input type="radio" name="state" value="loading" />
+              <span class="pg-chip">Loading</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset class="pg-fieldset" data-group="width">
+          <legend class="pg-legend">너비 (Width)</legend>
+          <div class="pg-options" role="radiogroup">
+            <label class="pg-option">
+              <input type="radio" name="width" value="hug" checked />
+              <span class="pg-chip">Hug</span>
+            </label>
+            <label class="pg-option">
+              <input type="radio" name="width" value="full" />
+              <span class="pg-chip">Full</span>
+            </label>
+          </div>
+        </fieldset>
+      </aside>
+
+      <!-- Right panel: preview + snippet -->
+      <section class="pg-stage" aria-label="Button preview">
+        <div class="pg-stage-head">
+          <span class="pg-stage-title">Preview</span>
+          <span class="pg-stage-title" id="pg-summary" aria-live="polite"></span>
+        </div>
+
+        <div class="pg-stage-canvas">
+          <div class="pg-preview-host" id="pg-preview-host">
+            <!-- live button rendered here -->
+          </div>
+        </div>
+
+        <div class="pg-snippet">
+          <div class="pg-snippet-head">
+            <span class="pg-stage-title">HTML</span>
+            <button type="button" class="pg-copy-btn" id="pg-copy">스니펫 복사</button>
+          </div>
+          <pre id="pg-snippet"></pre>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    (function () {
+      const root = document;
+      const previewHost = root.getElementById('pg-preview-host');
+      const snippetEl = root.getElementById('pg-snippet');
+      const summaryEl = root.getElementById('pg-summary');
+      const copyBtn = root.getElementById('pg-copy');
+
+      const LABEL = '버튼 텍스트';
+
+      function readState() {
+        return {
+          variant: root.querySelector('input[name="variant"]:checked').value,
+          size: root.querySelector('input[name="size"]:checked').value,
+          state: root.querySelector('input[name="state"]:checked').value,
+          width: root.querySelector('input[name="width"]:checked').value,
+        };
+      }
+
+      function buildClassList(s) {
+        const classes = ['btn', 'btn-' + s.variant];
+        if (s.size === 'lg') classes.push('btn-lg');
+        if (s.size === 'sm') classes.push('btn-sm');
+        if (s.width === 'full') classes.push('is-full');
+        if (s.state === 'loading') classes.push('is-loading');
+        return classes.join(' ');
+      }
+
+      function buildSnippet(s) {
+        const cls = buildClassList(s);
+        const attrs = [`class="${cls}"`, 'type="button"'];
+        if (s.state === 'disabled') attrs.push('disabled');
+        if (s.state === 'loading') {
+          attrs.push('aria-busy="true"');
+          attrs.push('aria-live="polite"');
+        }
+        return `<button ${attrs.join(' ')}>${LABEL}</button>`;
+      }
+
+      function render() {
+        const s = readState();
+        const html = buildSnippet(s);
+        previewHost.innerHTML = html;
+        snippetEl.textContent = html;
+        summaryEl.textContent = `${s.variant} · ${s.size} · ${s.state} · ${s.width}`;
+        copyBtn.removeAttribute('data-copied');
+        copyBtn.textContent = '스니펫 복사';
+      }
+
+      root.querySelectorAll('input[type="radio"]').forEach(function (input) {
+        input.addEventListener('change', render);
+      });
+
+      copyBtn.addEventListener('click', async function () {
+        const text = snippetEl.textContent || '';
+        try {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            await navigator.clipboard.writeText(text);
+          } else {
+            const ta = root.createElement('textarea');
+            ta.value = text;
+            ta.setAttribute('readonly', '');
+            ta.style.position = 'absolute';
+            ta.style.left = '-9999px';
+            root.body.appendChild(ta);
+            ta.select();
+            root.execCommand('copy');
+            root.body.removeChild(ta);
+          }
+          copyBtn.dataset.copied = 'true';
+          copyBtn.textContent = '복사됨!';
+          setTimeout(function () {
+            copyBtn.removeAttribute('data-copied');
+            copyBtn.textContent = '스니펫 복사';
+          }, 1600);
+        } catch (err) {
+          copyBtn.textContent = '복사 실패';
+        }
+      });
+
+      render();
+    })();
+  </script>
+</body>
+</html>

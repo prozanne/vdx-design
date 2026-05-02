@@ -30,6 +30,9 @@ breakpoints        mobile, tablet, laptop, desktop, xl
 
 layout             (optional) page-level max-widths that don't fit spacing/breakpoints
                    typical keys: narrow, content, wide
+zIndex             (optional) stacking-order tokens
+                   typical keys: base (0), raised (1), sticky (100), dropdown (200),
+                                 modal (1000), toast (1100)
 
 components
   button           height, paddingX, radius, fontWeight
@@ -39,11 +42,33 @@ components
   footer           background, color
 ```
 
+### Browser support
+
+The samsung-kr reference targets **evergreen browsers** (Chrome/Edge ≥ 115, Safari ≥ 16.4, Firefox ≥ 115). Specifically the examples assume:
+
+- `aspect-ratio` (Safari ≥ 15, Chrome ≥ 88)
+- `:focus-visible` (Safari ≥ 15.4, Chrome ≥ 86)
+- `gap` on flex (universal)
+- `color-mix()` (Safari ≥ 16.2, Chrome ≥ 111, Firefox ≥ 113)
+- Container queries (Safari ≥ 16, Chrome ≥ 105) — used in unit list (`cqw` etc.) but not in components.css today
+- `prefers-reduced-motion` (universal)
+
+Older surfaces (embedded WebViews, Edge LTSC) may need polyfills or `@supports` gates around `color-mix()` calls. The token system itself (CSS custom properties) works in every browser shipped after IE.
+
+### Accessibility contracts (pinned by `tests/contrast.test.js`)
+
+- **Body copy on light surfaces** — `text.{primary,secondary,muted}` on `surface.{page,card,elevated}` clears WCAG AA normal (≥ 4.5:1).
+- **Inverse copy on dark surfaces** — `text.onInverse` and `text.onInverseSecondary` clear AA normal on `surface.inverse`.
+- **Brand pairing** — `text.onBrand` on `brand.primary` and `brand.secondary` clear AA normal.
+- **Semantic colors are background-strength** — `semantic.{success,warning,danger,info}` are designed as fills (badges, banners). Pair them with whichever of `text.onBrand` (white) or `text.primary` (dark) clears AA normal — for example, `semantic.warning` (#F2A100) is too pale for white text but reads cleanly with `text.primary` on top. The contrast test asserts each semantic has at least one valid text pairing.
+- **`brand.accent`** — used only for hover/active states and never as a static foreground; its contrast is intentionally lower than `brand.secondary` to keep the resting state legible while signalling interaction on hover.
+
 ### Notes
 
 - **`text.onInverseSecondary`** is a softened version of `text.onInverse` for low-priority copy (footnotes, metadata) on dark surfaces. Use `onInverse` for body and headings; `onInverseSecondary` for the muted equivalent. Without this token, dark sections force a binary white-or-bright-gray choice with poor visual hierarchy.
 - **`colors.swatch`** is a free-form bag scoped to product-variant colors (e.g. phone paint colors). Tokens here are SKU data, NOT design tokens — they don't have a "role" and only the product UI references them. Adding a swatch never requires schema changes (the keys are pattern-matched).
 - **`layout.*`** is optional. Use it for max-widths the spacing scale can't express cleanly (e.g. `narrow: 720px` for a centered reading column). Reference via `var(--vdx-layout-narrow)` etc.
+- **`zIndex.*`** is optional. Use semantic stacking tokens (`var(--vdx-z-index-sticky)`) instead of magic numbers (`z-index: 100`). The naming is what matters, not the exact integer — drift the values together when you need to insert a layer (e.g. add `overlay` between `dropdown` and `modal`).
 
 ## CSS variable naming
 

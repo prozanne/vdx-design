@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Galaxy Z Flip6 — 제품 상세</title>
+  <link rel="stylesheet" href="../tokens.css">
+  <link rel="stylesheet" href="../components.css">
+  <style>
+    /* Product-variant swatches. These are SKU data (specific paint colors),
+       not design tokens, so they live in a page-local style block. */
+    .swatch {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--vdx-radius-pill);
+      border: 1px solid var(--vdx-colors-border-default);
+    }
+    /* Selected state uses outline so the layout doesn't shift between selected
+     * and unselected swatches, and avoids sub-pixel border rounding. */
+    .swatch--selected {
+      outline: 2px solid var(--vdx-colors-brand-primary);
+      outline-offset: 2px;
+    }
+    .swatch--mint  { background: var(--vdx-colors-swatch-mint); }
+    .swatch--black { background: var(--vdx-colors-swatch-black); }
+    .swatch--blue  { background: var(--vdx-colors-swatch-blue); }
+    .swatch--pink  { background: var(--vdx-colors-swatch-pink); }
+    .product-hero {
+      aspect-ratio: 1 / 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--vdx-spacing-12);
+    }
+    .product-features {
+      list-style: disc;
+      padding-left: 1.25rem;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav-bar" aria-label="주요 메뉴">
+    <div class="container-wide">
+      <a class="nav-brand" href="/" aria-label="Samsung 홈">SAMSUNG</a>
+      <ul class="nav-links">
+        <li><a href="#">스마트폰</a></li>
+        <li><a href="#">TV/AV</a></li>
+        <li><a href="#">생활가전</a></li>
+        <li><a href="#">컴퓨터</a></li>
+      </ul>
+      <div class="nav-actions">
+        <a class="btn btn-ghost btn-sm" href="#">검색</a>
+        <a class="btn btn-primary btn-sm" href="#">로그인</a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+
+    <section class="section">
+      <div class="container-wide">
+        <div class="grid grid-2 gap-8">
+
+          <div class="card card-flat product-hero">
+            <img src="https://placehold.co/600x600/F5F5F5/1A1A1A?text=Galaxy+Z+Flip6" alt="Galaxy Z Flip6" style="max-height: 100%;">
+          </div>
+
+          <div class="stack-lg">
+            <div>
+              <span class="badge badge-new">NEW</span>
+              <h1 class="display-m mt-4">Galaxy Z Flip6</h1>
+              <p class="body-l text-muted">접고 펼치는 새로운 경험. 한층 가벼워진 폴더블, 한층 똑똑해진 Galaxy AI.</p>
+            </div>
+
+            <div>
+              <div class="caption mb-2">색상 — Mint</div>
+              <div class="row">
+                <span class="swatch swatch--mint swatch--selected" aria-label="Mint"></span>
+                <span class="swatch swatch--black" aria-label="Black"></span>
+                <span class="swatch swatch--blue" aria-label="Blue"></span>
+                <span class="swatch swatch--pink" aria-label="Pink"></span>
+              </div>
+            </div>
+
+            <div>
+              <div class="caption mb-2">저장 용량</div>
+              <div class="row">
+                <a class="btn btn-secondary btn-sm" href="#">256GB</a>
+                <a class="btn btn-ghost btn-sm" href="#">512GB</a>
+                <a class="btn btn-ghost btn-sm" href="#">1TB</a>
+              </div>
+            </div>
+
+            <div>
+              <div class="caption">월 41,000원부터 / 36개월 할부</div>
+              <h2 class="mt-4">1,499,000원</h2>
+              <p class="body-s text-muted mt-2">사전예약 시 Buds3 증정 (선착순)</p>
+            </div>
+
+            <div class="hero-actions">
+              <a class="btn btn-primary btn-lg" href="#">구매하기</a>
+              <a class="btn btn-ghost btn-lg" href="#">장바구니</a>
+            </div>
+
+            <ul class="stack body-s text-muted product-features">
+              <li>전국 무료배송 (영업일 1~3일 소요)</li>
+              <li>30일 이내 무료 반품</li>
+              <li>Galaxy Care 1년 무상 서비스 포함</li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <h2 class="text-center mb-12">핵심 사양</h2>
+        <div class="grid grid-3">
+          <div class="card">
+            <div class="caption">디스플레이</div>
+            <h3>6.7" Dynamic AMOLED 2X</h3>
+            <p class="text-muted">120Hz 가변 주사율, 최대 2,600 니트.</p>
+          </div>
+          <div class="card">
+            <div class="caption">프로세서</div>
+            <h3>Snapdragon 8 Gen 3 for Galaxy</h3>
+            <p class="text-muted">전 세대 대비 30% 향상된 NPU 성능.</p>
+          </div>
+          <div class="card">
+            <div class="caption">카메라</div>
+            <h3>5,000만 화소 듀얼</h3>
+            <p class="text-muted">광각 + 초광각, AI 포토 어시스트 내장.</p>
+          </div>
+          <div class="card">
+            <div class="caption">배터리</div>
+            <h3>4,000 mAh</h3>
+            <p class="text-muted">25W 초고속 충전, 무선 충전 지원.</p>
+          </div>
+          <div class="card">
+            <div class="caption">방수/방진</div>
+            <h3>IP48</h3>
+            <p class="text-muted">생활방수 및 미세먼지 방지 등급.</p>
+          </div>
+          <div class="card">
+            <div class="caption">무게</div>
+            <h3>187g</h3>
+            <p class="text-muted">한 손에 가볍게.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container-wide">
+      <div class="footer-bottom">
+        <span>© 2026 Samsung Electronics Co., Ltd.</span>
+        <span>대한민국 / 한국어</span>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
