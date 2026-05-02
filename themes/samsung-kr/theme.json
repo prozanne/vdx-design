@@ -1,0 +1,173 @@
+{
+  "id": "samsung-kr",
+  "name": "Samsung Korea",
+  "version": "1.0.0",
+  "description": "Look-and-feel inspired by https://www.samsung.com/sec/. Black-dominant chrome with Samsung-blue accents, a heading-heavy display scale, and pill-shaped primary CTAs.",
+  "defaultLang": "ko",
+  "colors": {
+    "brand": {
+      "primary": "#000000",
+      "primaryHover": "#1A1A1A",
+      "secondary": "#1428A0",
+      "accent": "#2189FF"
+    },
+    "neutral": {
+      "0": "#FFFFFF",
+      "50": "#FAFAFA",
+      "100": "#F5F5F5",
+      "200": "#EEEEEE",
+      "300": "#DDDDDD",
+      "500": "#767676",
+      "700": "#3F3F3F",
+      "900": "#1A1A1A",
+      "1000": "#000000"
+    },
+    "semantic": {
+      "success": "#00A96E",
+      "warning": "#F2A100",
+      "danger": "#E12832",
+      "info": "#1428A0"
+    },
+    "surface": {
+      "page": "#FFFFFF",
+      "card": "#FFFFFF",
+      "elevated": "#FAFAFA",
+      "inverse": "#000000"
+    },
+    "text": {
+      "primary": "#1A1A1A",
+      "secondary": "#3F3F3F",
+      "muted": "#767676",
+      "onBrand": "#FFFFFF",
+      "onInverse": "#FFFFFF",
+      "onInverseSecondary": "#CCCCCC"
+    },
+    "border": {
+      "subtle": "#EEEEEE",
+      "default": "#DDDDDD",
+      "strong": "#1A1A1A",
+      "inverse": "#3F3F3F"
+    },
+    "swatch": {
+      "mint": "#B5D9C4",
+      "black": "#1A1A1A",
+      "blue": "#C7D5E6",
+      "pink": "#E5C4C4"
+    }
+  },
+  "typography": {
+    "fontFamily": {
+      "sans": "\"SamsungOne\", \"Pretendard\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", -apple-system, BlinkMacSystemFont, \"Helvetica Neue\", Arial, sans-serif",
+      "display": "\"SamsungSharpSans\", \"SamsungOne\", \"Pretendard\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", -apple-system, BlinkMacSystemFont, \"Helvetica Neue\", Arial, sans-serif",
+      "mono": "\"SF Mono\", Menlo, Consolas, \"Courier New\", monospace"
+    },
+    "fontSize": {
+      "caption": "12px",
+      "bodyS": "14px",
+      "bodyM": "16px",
+      "bodyL": "18px",
+      "h4": "20px",
+      "h3": "24px",
+      "h2": "32px",
+      "h1": "40px",
+      "displayM": "48px",
+      "displayL": "64px",
+      "displayXL": "80px"
+    },
+    "lineHeight": {
+      "tight": "1.1",
+      "normal": "1.5",
+      "relaxed": "1.7"
+    },
+    "fontWeight": {
+      "regular": "400",
+      "medium": "500",
+      "semibold": "600",
+      "bold": "700"
+    },
+    "letterSpacing": {
+      "tight": "-0.02em",
+      "normal": "0",
+      "wide": "0.04em"
+    }
+  },
+  "spacing": {
+    "0": "0",
+    "1": "4px",
+    "2": "8px",
+    "3": "12px",
+    "4": "16px",
+    "5": "20px",
+    "6": "24px",
+    "8": "32px",
+    "10": "40px",
+    "12": "48px",
+    "16": "64px",
+    "20": "80px",
+    "24": "96px"
+  },
+  "radius": {
+    "none": "0",
+    "sm": "4px",
+    "md": "8px",
+    "lg": "16px",
+    "pill": "999px"
+  },
+  "shadow": {
+    "none": "none",
+    "sm": "0 1px 2px rgba(0, 0, 0, 0.06)",
+    "md": "0 4px 12px rgba(0, 0, 0, 0.08)",
+    "lg": "0 12px 32px rgba(0, 0, 0, 0.10)"
+  },
+  "motion": {
+    "duration": {
+      "fast": "120ms",
+      "base": "240ms",
+      "slow": "400ms"
+    },
+    "easing": {
+      "standard": "cubic-bezier(0.2, 0, 0, 1)",
+      "emphasized": "cubic-bezier(0.3, 0, 0, 1)"
+    }
+  },
+  "breakpoints": {
+    "mobile": "360px",
+    "tablet": "768px",
+    "laptop": "1024px",
+    "desktop": "1440px",
+    "xl": "1920px"
+  },
+  "layout": {
+    "narrow": "720px",
+    "content": "1280px",
+    "wide": "1440px"
+  },
+  "components": {
+    "button": {
+      "height": "48px",
+      "paddingX": "32px",
+      "radius": "999px",
+      "fontWeight": "600"
+    },
+    "input": {
+      "height": "48px",
+      "paddingX": "16px",
+      "radius": "4px",
+      "borderColor": "#DDDDDD"
+    },
+    "card": {
+      "padding": "24px",
+      "radius": "8px",
+      "shadow": "0 1px 2px rgba(0, 0, 0, 0.06)"
+    },
+    "nav": {
+      "height": "64px",
+      "background": "#000000",
+      "color": "#FFFFFF"
+    },
+    "footer": {
+      "background": "#1A1A1A",
+      "color": "#DDDDDD"
+    }
+  }
+}

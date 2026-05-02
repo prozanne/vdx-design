@@ -1,0 +1,160 @@
+{
+  "id": "test-theme",
+  "name": "Test Theme",
+  "version": "0.0.1",
+  "description": "Fixture theme used by extensibility.test.js to prove a non-Samsung theme passes the schema.",
+  "colors": {
+    "brand": {
+      "primary": "#7C3AED",
+      "primaryHover": "#6D28D9",
+      "secondary": "#22D3EE",
+      "accent": "#FACC15"
+    },
+    "neutral": {
+      "0": "#FFFFFF",
+      "50": "#FAFAFA",
+      "100": "#F4F4F5",
+      "200": "#E4E4E7",
+      "300": "#D4D4D8",
+      "500": "#71717A",
+      "700": "#3F3F46",
+      "900": "#18181B",
+      "1000": "#000000"
+    },
+    "semantic": {
+      "success": "#10B981",
+      "warning": "#F59E0B",
+      "danger": "#EF4444",
+      "info": "#3B82F6"
+    },
+    "surface": {
+      "page": "#FFFFFF",
+      "card": "#FFFFFF",
+      "elevated": "#FAFAFA",
+      "inverse": "#18181B"
+    },
+    "text": {
+      "primary": "#18181B",
+      "secondary": "#3F3F46",
+      "muted": "#71717A",
+      "onBrand": "#FFFFFF",
+      "onInverse": "#FFFFFF"
+    },
+    "border": {
+      "subtle": "#E4E4E7",
+      "default": "#D4D4D8",
+      "strong": "#18181B",
+      "inverse": "#3F3F46"
+    }
+  },
+  "typography": {
+    "fontFamily": {
+      "sans": "system-ui, sans-serif",
+      "display": "Georgia, serif",
+      "mono": "ui-monospace, monospace"
+    },
+    "fontSize": {
+      "caption": "11px",
+      "bodyS": "13px",
+      "bodyM": "15px",
+      "bodyL": "17px",
+      "h4": "19px",
+      "h3": "22px",
+      "h2": "28px",
+      "h1": "36px",
+      "displayM": "44px",
+      "displayL": "56px",
+      "displayXL": "72px"
+    },
+    "lineHeight": {
+      "tight": "1.15",
+      "normal": "1.5",
+      "relaxed": "1.7"
+    },
+    "fontWeight": {
+      "regular": "400",
+      "medium": "500",
+      "semibold": "600",
+      "bold": "700"
+    },
+    "letterSpacing": {
+      "tight": "-0.01em",
+      "normal": "0",
+      "wide": "0.04em"
+    }
+  },
+  "spacing": {
+    "0": "0",
+    "1": "4px",
+    "2": "8px",
+    "3": "12px",
+    "4": "16px",
+    "5": "20px",
+    "6": "24px",
+    "8": "32px",
+    "10": "40px",
+    "12": "48px",
+    "16": "64px",
+    "20": "80px",
+    "24": "96px"
+  },
+  "radius": {
+    "none": "0",
+    "sm": "4px",
+    "md": "8px",
+    "lg": "16px",
+    "pill": "999px"
+  },
+  "shadow": {
+    "none": "none",
+    "sm": "0 1px 2px rgba(0, 0, 0, 0.05)",
+    "md": "0 4px 12px rgba(0, 0, 0, 0.1)",
+    "lg": "0 12px 32px rgba(0, 0, 0, 0.15)"
+  },
+  "motion": {
+    "duration": {
+      "fast": "100ms",
+      "base": "200ms",
+      "slow": "350ms"
+    },
+    "easing": {
+      "standard": "ease-out",
+      "emphasized": "cubic-bezier(0.2, 0, 0, 1)"
+    }
+  },
+  "breakpoints": {
+    "mobile": "320px",
+    "tablet": "768px",
+    "laptop": "1024px",
+    "desktop": "1280px",
+    "xl": "1536px"
+  },
+  "components": {
+    "button": {
+      "height": "44px",
+      "paddingX": "20px",
+      "radius": "8px",
+      "fontWeight": "600"
+    },
+    "input": {
+      "height": "44px",
+      "paddingX": "12px",
+      "radius": "8px",
+      "borderColor": "#D4D4D8"
+    },
+    "card": {
+      "padding": "20px",
+      "radius": "12px",
+      "shadow": "0 1px 3px rgba(0, 0, 0, 0.06)"
+    },
+    "nav": {
+      "height": "60px",
+      "background": "#FFFFFF",
+      "color": "#18181B"
+    },
+    "footer": {
+      "background": "#18181B",
+      "color": "#D4D4D8"
+    }
+  }
+}

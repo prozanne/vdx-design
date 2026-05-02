@@ -1,0 +1,15 @@
+{
+  "name": "vdx-design",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Samsung VDX themed frontend design skill — generates web UI matched to a registered theme.",
+  "type": "module",
+  "scripts": {
+    "test": "node --test",
+    "build:tokens": "node lib/token-to-css.js",
+    "list:themes": "node lib/theme-registry.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

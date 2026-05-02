@@ -1,0 +1,546 @@
+/* Component classes for the samsung-kr theme.
+ * All values reference CSS variables defined in tokens.css.
+ * Import tokens.css FIRST in any HTML page that uses these classes.
+ */
+
+/* ---------- Reset & base ---------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  margin: 0;
+  font-family: var(--vdx-typography-font-family-sans);
+  font-size: var(--vdx-typography-font-size-body-m);
+  line-height: var(--vdx-typography-line-height-normal);
+  color: var(--vdx-colors-text-primary);
+  background: var(--vdx-colors-surface-page);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* ---------- Typography helpers ---------- */
+
+.display-xl,
+.display-l,
+.display-m,
+h1, h2, h3, h4 {
+  font-family: var(--vdx-typography-font-family-display);
+  letter-spacing: var(--vdx-typography-letter-spacing-tight);
+  line-height: var(--vdx-typography-line-height-tight);
+  margin: 0;
+}
+
+.display-xl { font-size: var(--vdx-typography-font-size-display-xl); font-weight: 700; }
+.display-l  { font-size: var(--vdx-typography-font-size-display-l);  font-weight: 700; }
+.display-m  { font-size: var(--vdx-typography-font-size-display-m);  font-weight: 700; }
+
+h1 { font-size: var(--vdx-typography-font-size-h1); font-weight: 700; }
+h2 { font-size: var(--vdx-typography-font-size-h2); font-weight: 700; }
+h3 { font-size: var(--vdx-typography-font-size-h3); font-weight: 600; }
+h4 { font-size: var(--vdx-typography-font-size-h4); font-weight: 600; }
+
+.body-l    { font-size: var(--vdx-typography-font-size-body-l); }
+.body-m    { font-size: var(--vdx-typography-font-size-body-m); }
+.body-s    { font-size: var(--vdx-typography-font-size-body-s); }
+.caption   { font-size: var(--vdx-typography-font-size-caption); color: var(--vdx-colors-text-muted); }
+
+.text-muted   { color: var(--vdx-colors-text-muted); }
+.text-strong  { color: var(--vdx-colors-text-primary); font-weight: 600; }
+
+/* ---------- Layout primitives ---------- */
+
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding-inline: var(--vdx-spacing-6);
+}
+
+.container-wide {
+  max-width: var(--vdx-breakpoints-desktop);
+  margin: 0 auto;
+  padding-inline: var(--vdx-spacing-6);
+}
+
+/* Narrow reading-width container — used for forms, prose, and modal-like
+ * cards inside a wider section. Stays in sync with the .hero-content
+ * max-width so a hero block and a centered form share the same column. */
+.container-narrow {
+  max-width: var(--vdx-layout-narrow);
+  margin: 0 auto;
+  padding-inline: var(--vdx-spacing-6);
+}
+
+.section {
+  padding-block: var(--vdx-spacing-20);
+}
+
+.section-tight {
+  padding-block: var(--vdx-spacing-12);
+}
+
+.stack > * + * { margin-top: var(--vdx-spacing-4); }
+.stack-lg > * + * { margin-top: var(--vdx-spacing-8); }
+
+.row {
+  display: flex;
+  gap: var(--vdx-spacing-6);
+  flex-wrap: wrap;
+}
+
+.grid {
+  display: grid;
+  gap: var(--vdx-spacing-6);
+}
+
+.grid-2 { grid-template-columns: repeat(2, 1fr); }
+.grid-3 { grid-template-columns: repeat(3, 1fr); }
+.grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+@media (max-width: 1024px) {
+  .grid-4 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+}
+
+/* ---------- Buttons ---------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--vdx-components-button-height);
+  padding-inline: var(--vdx-components-button-padding-x);
+  border-radius: var(--vdx-components-button-radius);
+  font-weight: var(--vdx-components-button-font-weight);
+  font-size: var(--vdx-typography-font-size-body-m);
+  letter-spacing: 0;
+  text-decoration: none;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: background var(--vdx-motion-duration-fast) var(--vdx-motion-easing-standard),
+              color var(--vdx-motion-duration-fast) var(--vdx-motion-easing-standard),
+              border-color var(--vdx-motion-duration-fast) var(--vdx-motion-easing-standard);
+  white-space: nowrap;
+}
+
+.btn-primary {
+  background: var(--vdx-colors-brand-primary);
+  color: var(--vdx-colors-text-on-brand);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--vdx-colors-brand-primary);
+  border-color: var(--vdx-colors-brand-primary);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--vdx-colors-text-primary);
+  border-color: var(--vdx-colors-border-default);
+}
+
+.btn-accent {
+  background: var(--vdx-colors-brand-secondary);
+  color: var(--vdx-colors-text-on-brand);
+}
+
+@media (hover: hover) {
+  .btn-primary:hover {
+    background: var(--vdx-colors-brand-primary-hover);
+  }
+  .btn-secondary:hover {
+    background: var(--vdx-colors-brand-primary);
+    color: var(--vdx-colors-text-on-brand);
+  }
+  .btn-ghost:hover {
+    border-color: var(--vdx-colors-brand-primary);
+  }
+  .btn-accent:hover {
+    background: var(--vdx-colors-brand-accent);
+  }
+}
+
+.btn:disabled,
+.btn[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.btn-link {
+  background: transparent;
+  border: none;
+  height: auto;
+  padding: 0;
+  color: var(--vdx-colors-text-primary);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.btn-sm {
+  height: 36px;
+  padding-inline: var(--vdx-spacing-5);
+  font-size: var(--vdx-typography-font-size-body-s);
+}
+
+.btn-lg {
+  height: 56px;
+  padding-inline: var(--vdx-spacing-10);
+  font-size: var(--vdx-typography-font-size-body-l);
+}
+
+/* ---------- Cards ---------- */
+
+.card {
+  background: var(--vdx-colors-surface-card);
+  border: 1px solid var(--vdx-colors-border-subtle);
+  border-radius: var(--vdx-components-card-radius);
+  padding: var(--vdx-components-card-padding);
+  box-shadow: var(--vdx-components-card-shadow);
+  transition: box-shadow var(--vdx-motion-duration-base) var(--vdx-motion-easing-standard),
+              transform var(--vdx-motion-duration-base) var(--vdx-motion-easing-standard);
+}
+@media (hover: hover) {
+  .card:hover {
+    box-shadow: var(--vdx-shadow-md);
+    transform: translateY(-2px);
+  }
+}
+
+.card-flat {
+  border: none;
+  box-shadow: none;
+  background: var(--vdx-colors-surface-elevated);
+}
+
+.card-media {
+  padding: 0;
+  overflow: hidden;
+}
+.card-media .card-body { padding: var(--vdx-components-card-padding); }
+.card-media img { aspect-ratio: 4 / 3; object-fit: cover; width: 100%; }
+
+/* ---------- Inputs ---------- */
+
+.input {
+  width: 100%;
+  height: var(--vdx-components-input-height);
+  padding-inline: var(--vdx-components-input-padding-x);
+  border: 1px solid var(--vdx-components-input-border-color);
+  border-radius: var(--vdx-components-input-radius);
+  font-family: inherit;
+  font-size: var(--vdx-typography-font-size-body-m);
+  background: var(--vdx-colors-surface-card);
+  color: var(--vdx-colors-text-primary);
+  transition: border-color var(--vdx-motion-duration-fast) var(--vdx-motion-easing-standard);
+}
+.input:focus {
+  border-color: var(--vdx-colors-brand-primary);
+}
+.input:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Visible focus ring for keyboard navigation. Covers every interactive
+ * surface that participates in tab order. The ring is 2px so it survives
+ * forced-colors mode, with an offset so it doesn't collide with rounded
+ * borders on .btn (pill) and .card. */
+.btn:focus-visible,
+.btn-link:focus-visible,
+.input:focus-visible,
+.nav-links a:focus-visible,
+[role="button"]:focus-visible {
+  outline: 2px solid var(--vdx-colors-brand-accent);
+  outline-offset: 2px;
+}
+
+.label {
+  display: block;
+  font-size: var(--vdx-typography-font-size-body-s);
+  color: var(--vdx-colors-text-secondary);
+  margin-bottom: var(--vdx-spacing-2);
+  font-weight: 500;
+}
+
+/* ---------- Navigation ---------- */
+
+.nav-bar {
+  height: var(--vdx-components-nav-height);
+  background: var(--vdx-components-nav-background);
+  color: var(--vdx-components-nav-color);
+  display: flex;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.nav-bar .container,
+.nav-bar .container-wide {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.nav-brand {
+  font-family: var(--vdx-typography-font-family-display);
+  font-weight: 700;
+  font-size: var(--vdx-typography-font-size-body-l);
+  letter-spacing: var(--vdx-typography-letter-spacing-wide);
+  margin-right: var(--vdx-spacing-10);
+}
+
+.nav-links {
+  display: flex;
+  gap: var(--vdx-spacing-8);
+  flex: 1;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links a {
+  color: inherit;
+  font-size: var(--vdx-typography-font-size-body-m);
+  font-weight: 500;
+  position: relative;
+  padding-block: var(--vdx-spacing-2);
+}
+@media (hover: hover) {
+  .nav-links a:hover::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 2px;
+    background: currentColor;
+  }
+}
+
+.nav-actions {
+  display: flex;
+  gap: var(--vdx-spacing-4);
+  align-items: center;
+}
+
+/* ---------- Footer ---------- */
+
+.footer {
+  background: var(--vdx-components-footer-background);
+  color: var(--vdx-components-footer-color);
+  padding-block: var(--vdx-spacing-16);
+  font-size: var(--vdx-typography-font-size-body-s);
+}
+
+.footer h4 {
+  color: var(--vdx-colors-text-on-inverse);
+  font-size: var(--vdx-typography-font-size-body-m);
+  margin-bottom: var(--vdx-spacing-4);
+}
+
+.footer ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer li + li { margin-top: var(--vdx-spacing-2); }
+
+@media (hover: hover) {
+  .footer a:hover { color: var(--vdx-colors-text-on-inverse); }
+}
+
+.footer-bottom {
+  border-top: 1px solid var(--vdx-colors-border-inverse);
+  margin-top: var(--vdx-spacing-12);
+  padding-top: var(--vdx-spacing-6);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--vdx-spacing-4);
+  color: var(--vdx-colors-text-muted);
+}
+
+/* ---------- Hero ---------- */
+
+.hero {
+  position: relative;
+  min-height: 600px;
+  display: flex;
+  align-items: center;
+  background: var(--vdx-colors-surface-elevated);
+  overflow: hidden;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: var(--vdx-layout-narrow);
+  padding-block: var(--vdx-spacing-20);
+}
+
+.hero-eyebrow {
+  text-transform: uppercase;
+  font-size: var(--vdx-typography-font-size-body-s);
+  letter-spacing: var(--vdx-typography-letter-spacing-wide);
+  font-weight: 600;
+  color: var(--vdx-colors-brand-secondary);
+  margin-bottom: var(--vdx-spacing-4);
+}
+
+.hero h1,
+.hero .display-l,
+.hero .display-xl {
+  margin-bottom: var(--vdx-spacing-6);
+}
+
+.hero p {
+  font-size: var(--vdx-typography-font-size-body-l);
+  color: var(--vdx-colors-text-secondary);
+  margin-bottom: var(--vdx-spacing-8);
+  max-width: 560px;
+}
+
+.hero-actions {
+  display: flex;
+  gap: var(--vdx-spacing-4);
+  flex-wrap: wrap;
+}
+
+/* ---------- Badges ---------- */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  height: 24px;
+  padding-inline: var(--vdx-spacing-3);
+  border-radius: var(--vdx-radius-pill);
+  font-size: var(--vdx-typography-font-size-caption);
+  font-weight: 600;
+  letter-spacing: var(--vdx-typography-letter-spacing-wide);
+  text-transform: uppercase;
+}
+.badge-promo { background: var(--vdx-colors-semantic-danger); color: var(--vdx-colors-text-on-brand); }
+.badge-new   { background: var(--vdx-colors-brand-secondary); color: var(--vdx-colors-text-on-brand); }
+.badge-info  { background: var(--vdx-colors-neutral-100); color: var(--vdx-colors-text-secondary); }
+
+/* ---------- Product card ---------- */
+
+.product-card {
+  background: var(--vdx-colors-surface-card);
+  border: 1px solid var(--vdx-colors-border-subtle);
+  border-radius: var(--vdx-components-card-radius);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow var(--vdx-motion-duration-base) var(--vdx-motion-easing-standard);
+}
+@media (hover: hover) {
+  .product-card:hover { box-shadow: var(--vdx-shadow-md); }
+}
+
+.product-card .image {
+  aspect-ratio: 1 / 1;
+  background: var(--vdx-colors-neutral-50);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--vdx-spacing-8);
+}
+
+.product-card .image img { max-height: 100%; object-fit: contain; }
+
+.product-card .body {
+  padding: var(--vdx-spacing-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--vdx-spacing-2);
+  flex: 1;
+}
+
+.product-card .name {
+  font-family: var(--vdx-typography-font-family-display);
+  font-weight: 700;
+  font-size: var(--vdx-typography-font-size-h4);
+  letter-spacing: var(--vdx-typography-letter-spacing-tight);
+}
+
+.product-card .price {
+  font-size: var(--vdx-typography-font-size-body-l);
+  font-weight: 600;
+}
+
+.product-card .price-old {
+  color: var(--vdx-colors-text-muted);
+  text-decoration: line-through;
+  font-weight: 400;
+  margin-right: var(--vdx-spacing-2);
+}
+
+/* ---------- Utility ---------- */
+
+.text-center { text-align: center; }
+.text-right  { text-align: right; }
+.flex        { display: flex; }
+.flex-col    { display: flex; flex-direction: column; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.gap-2 { gap: var(--vdx-spacing-2); }
+.gap-4 { gap: var(--vdx-spacing-4); }
+.gap-6 { gap: var(--vdx-spacing-6); }
+.gap-8 { gap: var(--vdx-spacing-8); }
+.mt-4  { margin-top: var(--vdx-spacing-4); }
+.mt-8  { margin-top: var(--vdx-spacing-8); }
+.mt-12 { margin-top: var(--vdx-spacing-12); }
+.mb-4  { margin-bottom: var(--vdx-spacing-4); }
+.mb-8  { margin-bottom: var(--vdx-spacing-8); }
+.mb-12 { margin-bottom: var(--vdx-spacing-12); }
+
+.surface-inverse {
+  background: var(--vdx-colors-surface-inverse);
+  color: var(--vdx-colors-text-on-inverse);
+}
+.surface-inverse h1, .surface-inverse h2, .surface-inverse h3, .surface-inverse h4 { color: var(--vdx-colors-text-on-inverse); }
+/* Secondary copy on inverse surfaces. Uses the dedicated on-inverse-secondary
+ * token so we get a verified WCAG-AA contrast ratio against the inverse
+ * background — for samsung-kr that's #CCCCCC on #000000 ≈ 13:1 (AAA). */
+.surface-inverse p { color: var(--vdx-colors-text-on-inverse-secondary); }
+.footer .text-muted { color: var(--vdx-colors-text-on-inverse-secondary); }
+
+/* ---------- Reduced motion ----------
+ * Honors prefers-reduced-motion at the user's OS/browser level. Squash all
+ * transitions/animations to a single tick (0.01ms is the W3C-recommended
+ * not-zero value so transitionend still fires) and disable the lift on cards
+ * so vestibular-sensitive users don't get jarring movement. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+  .card:hover,
+  .product-card:hover {
+    transform: none;
+  }
+}
