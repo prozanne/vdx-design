@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { themeToCss, compareKeys } from "../lib/token-to-css.js";
+import { themeToCss, compareKeys, assertThemeDirInRoot } from "../lib/token-to-css.js";
 
 // Minimal theme used for ordering tests — only the spacing group matters.
 function makeTheme(spacingKeys) {
@@ -91,6 +91,40 @@ test("compareKeys is antisymmetric across the same input pair", () => {
     const ba = compareKeys(b, a);
     assert.equal(Math.sign(ab), -Math.sign(ba), `compareKeys(${a},${b})=${ab} but compareKeys(${b},${a})=${ba}`);
   }
+});
+
+test("themeToCss rejects theme.name containing CSS comment-close (security regression for `*/`)", () => {
+  const t = makeTheme(["0", "1"]);
+  t.name = "evil */ body{display:none}/* attack";
+  assert.throws(() => themeToCss(t), /Unsafe theme\.name/);
+});
+
+test("themeToCss rejects token values containing a backslash escape", () => {
+  const t = makeTheme(["0", "1"]);
+  t.colors.brand.primary = "red \\3a evil";
+  assert.throws(() => themeToCss(t), /Unsafe token value/);
+});
+
+test("themeToCss rejects token values containing /* or */", () => {
+  const t = makeTheme(["0", "1"]);
+  t.colors.brand.primary = "red /* injection */";
+  assert.throws(() => themeToCss(t), /Unsafe token value/);
+});
+
+test("assertThemeDirInRoot blocks directories outside the canonical themes root", () => {
+  assert.throws(
+    () => assertThemeDirInRoot("/tmp/anywhere"),
+    /outside/,
+  );
+});
+
+test("assertThemeDirInRoot accepts a subdirectory of an explicit allowRoot", () => {
+  // Sandbox check is the security property: a caller passing an explicit
+  // allowRoot can opt into a non-default root, but the sub-directory must
+  // still be inside it. Sibling/parent paths remain rejected.
+  const root = "/var/sandbox";
+  assert.equal(assertThemeDirInRoot("/var/sandbox/my-theme", root), "/var/sandbox/my-theme");
+  assert.throws(() => assertThemeDirInRoot("/var/elsewhere", root), /outside/);
 });
 
 test("themeToCss kebab-cases camelCase top-level group keys", () => {

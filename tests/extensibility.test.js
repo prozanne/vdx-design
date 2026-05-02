@@ -54,7 +54,7 @@ test("a brand-new theme dropped into a themes dir is auto-registered", () => {
     const theme = getTheme(id, themesDir);
     assert.equal(theme.id, id);
 
-    const out = buildTokensCss(dir);
+    const out = buildTokensCss(dir, { allowRoot: themesDir });
     assert.ok(existsSync(out));
   } finally {
     rmSync(themesDir, { recursive: true, force: true });
