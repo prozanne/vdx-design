@@ -189,6 +189,31 @@ test("bundleSite refuses to inline absolute-path <script src> outside the target
   }
 });
 
+test("bundleSite strips UTF-8 BOM from the entry HTML and from inlined CSS / JS", () => {
+  // Some Windows editors prepend a UTF-8 BOM (EF BB BF). Without explicit
+  // stripping it lands at the start of the bundle and (worse) at the start
+  // of every inlined <style> / <script> block, which IS invalid syntax in
+  // CSS/JS and breaks rendering. Pin the strip behaviour here so a future
+  // refactor can't silently regress.
+  const BOM = "﻿";
+  const root = makeSite({
+    "index.html": BOM + `<!DOCTYPE html><html><head><link rel="stylesheet" href="./style.css"><script src="./script.js"></script></head><body></body></html>`,
+    "style.css": BOM + `:root { --x: 1px; }`,
+    "script.js": BOM + `console.log("ok");`,
+  });
+  try {
+    const out = bundleSite(root);
+    const html = readFileSync(out, "utf8");
+    assert.ok(!html.startsWith(BOM), "entry HTML BOM must be stripped");
+    assert.ok(!html.includes(`<style>\n${BOM}`), "linked CSS BOM must be stripped before <style> inlining");
+    assert.ok(!html.includes(`<script>\n${BOM}`), "linked JS BOM must be stripped before <script> inlining");
+    assert.ok(html.includes("--x: 1px"), "CSS contents still present");
+    assert.ok(html.includes(`console.log("ok")`), "JS contents still present");
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
 test("bundleSite refuses to follow a symlink inside src/ that points outside the target", async () => {
   // Without realpath in resolveInside, an attacker can drop
   // `src/leak.css -> /etc/hosts`. The relative-from-root check on the
