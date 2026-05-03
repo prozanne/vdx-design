@@ -1,0 +1,32 @@
+# VDX Design — Cline rules
+
+This file is a thin entry point for Cline. Two canonical documents in this
+repo carry the actual instructions; read them when working on vdx-design
+tasks:
+
+1. `skills/vdx-design/SKILL.md` — the full Samsung-themed frontend skill:
+   trigger conditions, theme loading, boilerplate, token usage rules, A/B
+   decision flow with `vdx-decide`, and the reference docs index.
+
+2. `skills/vdx-design/workflows/scaffold-and-bundle.md` — the scaffold-
+   and-bundle workflow: how to create a new site under `<target>/src/`,
+   what files to write, and how to ship a single self-contained
+   `<target>/view/index.html` via `node lib/bundle.js <target>`.
+
+## Quick triggers
+
+- "Build a samsung-kr page" / "Use the `<theme-id>` theme" → follow
+  `skills/vdx-design/SKILL.md`.
+- "Scaffold a vdx site at `<dir>`" → follow the Scaffold steps in
+  `scaffold-and-bundle.md`.
+- "Bundle `<dir>`" / "다 만들었어, 하나로 묶어" → follow the Bundle steps
+  in `scaffold-and-bundle.md` (just runs `node lib/bundle.js <target>`).
+
+## Hard rules
+
+- Never hardcode hex/px values in generated CSS — always `var(--vdx-…)`.
+- The single-file deliverable for end users is `<target>/view/index.html`
+  (CSS + JS inlined). Never tell a user to ship a multi-file site.
+- Don't add npm dependencies. The project uses Node built-ins only.
+- Never push directly to `main` on this repo. Land changes on a feature
+  branch and open a PR.

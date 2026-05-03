@@ -1,0 +1,40 @@
+---
+description: VDX Design — Samsung-themed frontend skill with scaffold-and-bundle workflow. Activate when working in themes/, lib/bundle.js, or any vdx site (src/index.html → view/index.html).
+globs:
+  - themes/**/*.{html,css,json}
+  - lib/{bundle,token-to-css,theme-loader,theme-registry,decide}.js
+  - skills/vdx-design/**
+  - "**/src/index.html"
+  - "**/view/index.html"
+alwaysApply: false
+---
+
+# VDX Design
+
+This is a thin entry point. The canonical instructions live in two files
+inside this repo — read them when activating this rule:
+
+1. **`skills/vdx-design/SKILL.md`** — the full skill: when to trigger,
+   theme loading, boilerplate, token usage rules, A/B decision flow, and
+   reference docs index.
+
+2. **`skills/vdx-design/workflows/scaffold-and-bundle.md`** — the
+   scaffold-and-bundle workflow: how to set up a new site under
+   `<target>/src/` and how to ship it as a single `<target>/view/index.html`
+   via `node lib/bundle.js <target>`.
+
+## Quick triggers
+
+| User says | Read & follow |
+|---|---|
+| "Build a samsung-kr page", "Use the `<theme-id>` theme" | `skills/vdx-design/SKILL.md` |
+| "Scaffold a vdx site at `<dir>`" | `scaffold-and-bundle.md` → Scaffold steps |
+| "Bundle `<dir>`" / "다 만들었어, 하나로 묶어" | `scaffold-and-bundle.md` → Bundle steps |
+| Has a meaningful taste choice between two designs | `SKILL.md` → Decision flow (`vdx-decide`) |
+
+## Hard rules
+
+- Never hardcode hex/px values in generated CSS — always `var(--vdx-…)`.
+- The single-file deliverable for end users is `<target>/view/index.html`
+  (CSS + JS inlined). Never tell a user to ship a multi-file site.
+- Don't add npm dependencies. The project uses Node built-ins only.

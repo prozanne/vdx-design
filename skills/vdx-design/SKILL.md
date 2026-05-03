@@ -107,6 +107,10 @@ Read these as needed:
 - `references/typography.md` — Type scale, weight choices, when to use display vs heading vs body.
 - `references/theme-extension.md` — How to add a new theme (e.g., `samsung-global`, `harman-luxury`).
 
+## Workflows
+
+- `workflows/scaffold-and-bundle.md` — Scaffold a user site at `<target>/src/` and ship it as a single self-contained `<target>/view/index.html` (CSS + JS inlined). Triggered by "scaffold a vdx site", "bundle `<dir>`", or the equivalent Korean phrasing. The bundler is `lib/bundle.js`. The same workflow file is the canonical source for Cursor (`.cursor/rules/vdx-design.mdc`) and Cline (`.clinerules`) — keep it in sync there if you edit it.
+
 ## Out of scope
 
 - Generating JS frameworks (React/Vue). Output is HTML+CSS; consumers can adapt.
