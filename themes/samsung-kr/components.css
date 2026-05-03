@@ -57,12 +57,10 @@ h3 { font-size: var(--vdx-typography-font-size-h3); font-weight: 600; }
 h4 { font-size: var(--vdx-typography-font-size-h4); font-weight: 600; }
 
 .body-l    { font-size: var(--vdx-typography-font-size-body-l); }
-.body-m    { font-size: var(--vdx-typography-font-size-body-m); }
 .body-s    { font-size: var(--vdx-typography-font-size-body-s); }
 .caption   { font-size: var(--vdx-typography-font-size-caption); color: var(--vdx-colors-text-muted); }
 
 .text-muted   { color: var(--vdx-colors-text-muted); }
-.text-strong  { color: var(--vdx-colors-text-primary); font-weight: 600; }
 
 /* ---------- Layout primitives ---------- */
 
@@ -89,10 +87,6 @@ h4 { font-size: var(--vdx-typography-font-size-h4); font-weight: 600; }
 
 .section {
   padding-block: var(--vdx-spacing-20);
-}
-
-.section-tight {
-  padding-block: var(--vdx-spacing-12);
 }
 
 .stack > * + * { margin-top: var(--vdx-spacing-4); }
@@ -232,13 +226,6 @@ h4 { font-size: var(--vdx-typography-font-size-h4); font-weight: 600; }
   box-shadow: none;
   background: var(--vdx-colors-surface-elevated);
 }
-
-.card-media {
-  padding: 0;
-  overflow: hidden;
-}
-.card-media .card-body { padding: var(--vdx-components-card-padding); }
-.card-media img { aspect-ratio: 4 / 3; object-fit: cover; width: 100%; }
 
 /* ---------- Inputs ---------- */
 
@@ -554,18 +541,12 @@ h4 { font-size: var(--vdx-typography-font-size-h4); font-weight: 600; }
 /* ---------- Utility ---------- */
 
 .text-center { text-align: center; }
-.text-right  { text-align: right; }
 .flex        { display: flex; }
-.flex-col    { display: flex; flex-direction: column; }
 .items-center { align-items: center; }
 .justify-between { justify-content: space-between; }
-.gap-2 { gap: var(--vdx-spacing-2); }
-.gap-4 { gap: var(--vdx-spacing-4); }
-.gap-6 { gap: var(--vdx-spacing-6); }
 .gap-8 { gap: var(--vdx-spacing-8); }
 .mt-4  { margin-top: var(--vdx-spacing-4); }
 .mt-8  { margin-top: var(--vdx-spacing-8); }
-.mt-12 { margin-top: var(--vdx-spacing-12); }
 .mb-4  { margin-bottom: var(--vdx-spacing-4); }
 .mb-8  { margin-bottom: var(--vdx-spacing-8); }
 .mb-12 { margin-bottom: var(--vdx-spacing-12); }
