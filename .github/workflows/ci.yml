@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    name: node ${{ matrix.node }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        node: [20, 22]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - run: npm test
+
+      # Re-run the token generator and fail if it produced output that
+      # differs from what's checked in. Catches "I changed theme.json but
+      # forgot to regenerate tokens.css" before review.
+      - name: tokens.css is up-to-date
+        run: |
+          npm run build:tokens
+          if ! git diff --exit-code -- 'themes/*/tokens.css'; then
+            echo "::error::tokens.css drift — run 'npm run build:tokens' and commit the result"
+            exit 1
+          fi
