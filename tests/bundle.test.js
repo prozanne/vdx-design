@@ -189,6 +189,28 @@ test("bundleSite refuses to inline absolute-path <script src> outside the target
   }
 });
 
+test("bundleSite refuses to follow a symlink inside src/ that points outside the target", async () => {
+  // Without realpath in resolveInside, an attacker can drop
+  // `src/leak.css -> /etc/hosts`. The relative-from-root check on the
+  // un-realpath'd path sees "leak.css" (inside) while readFileSync
+  // pulls /etc/hosts. realpathSync resolves the symlink first so the
+  // sandbox check sees the true target and rejects it.
+  const { symlinkSync } = await import("node:fs");
+  const root = makeSite({
+    "index.html": `<!DOCTYPE html><html><head><link rel="stylesheet" href="./leak.css"></head></html>`,
+  });
+  try {
+    symlinkSync("/etc/hosts", join(root, "src", "leak.css"));
+    const out = bundleSite(root);
+    const html = readFileSync(out, "utf8");
+    assert.ok(!/127\.0\.0\.1|localhost/.test(html), "symlink to /etc/hosts must not exfiltrate contents");
+    assert.ok(html.includes(`href="./leak.css"`), "symlink-escape <link> must be left alone");
+    assert.ok(!html.includes("<style>"), "no <style> block from a symlink that escapes the sandbox");
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
 test("bundleSite refuses to inline CSS url() that escapes the target via ../", () => {
   // The url() resolves relative to the CSS file's directory. A `..` chain
   // long enough to escape <root> must be left as a literal url() in the
