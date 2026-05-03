@@ -144,3 +144,66 @@ test("assertSrcInside rejects a path outside the target root", () => {
     /must live inside/,
   );
 });
+
+test("bundleSite refuses to inline absolute-path <link href> outside the target (e.g. /etc/hosts)", () => {
+  const root = makeSite({
+    "index.html": `<!DOCTYPE html><html><head><link rel="stylesheet" href="/etc/hosts"></head></html>`,
+  });
+  try {
+    const out = bundleSite(root);
+    const html = readFileSync(out, "utf8");
+    assert.ok(html.includes(`href="/etc/hosts"`), "external-to-sandbox <link> must be left alone");
+    assert.ok(!html.includes("<style>"), "no <style> block should be emitted from a sandbox-escape ref");
+    assert.ok(!/127\.0\.0\.1|localhost/.test(html), "sandbox must prevent /etc/hosts contents from leaking");
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("bundleSite refuses to inline ../ traversal that escapes the target", () => {
+  // The src/ dir is inside <root>; a CSS path of `../../../etc/hosts` from
+  // the HTML's directory escapes <root> and must not be read.
+  const root = makeSite({
+    "index.html": `<!DOCTYPE html><html><head><link rel="stylesheet" href="../../../etc/hosts"></head></html>`,
+  });
+  try {
+    const out = bundleSite(root);
+    const html = readFileSync(out, "utf8");
+    assert.ok(html.includes(`href="../../../etc/hosts"`), "traversal href must survive untouched");
+    assert.ok(!/127\.0\.0\.1|localhost/.test(html), "traversal must not exfiltrate /etc/hosts");
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("bundleSite refuses to inline absolute-path <script src> outside the target", () => {
+  const root = makeSite({
+    "index.html": `<!DOCTYPE html><html><head><script src="/etc/hosts"></script></head></html>`,
+  });
+  try {
+    const out = bundleSite(root);
+    const html = readFileSync(out, "utf8");
+    assert.ok(html.includes(`src="/etc/hosts"`), "out-of-sandbox <script src> must be left alone");
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("bundleSite refuses to inline CSS url() that escapes the target via ../", () => {
+  // The url() resolves relative to the CSS file's directory. A `..` chain
+  // long enough to escape <root> must be left as a literal url() in the
+  // emitted <style> block, not turned into a data: URI of a host file.
+  const root = makeSite({
+    "index.html": `<!DOCTYPE html><html><head><link rel="stylesheet" href="./style.css"></head></html>`,
+    "style.css": `body { background: url('../../../etc/hosts'); }`,
+  });
+  try {
+    const out = bundleSite(root);
+    const html = readFileSync(out, "utf8");
+    assert.ok(html.includes("<style>"), "the local stylesheet itself should still be inlined");
+    assert.ok(html.includes("../../../etc/hosts"), "escaping url() must survive untouched");
+    assert.ok(!/127\.0\.0\.1|localhost/.test(html), "escaping url() must not exfiltrate /etc/hosts");
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
