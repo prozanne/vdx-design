@@ -80,10 +80,11 @@ When to invoke:
 
 Procedure:
 1. Generate two variant HTML fragments (partial — `<section>` blocks, no `<html>/<body>` wrapper). Save them to `.vdx-decisions/<topic>-a.html` and `.vdx-decisions/<topic>-b.html`. Both variants must already use only `var(--vdx-...)` tokens.
-2. Run via Bash:
+2. Run via Bash from the repo root:
    ```
-   npx vdx-decide --topic <topic> --question "<짧은 한국어 질문>" --a .vdx-decisions/<topic>-a.html --b .vdx-decisions/<topic>-b.html
+   node lib/decide.js --topic <topic> --question "<짧은 한국어 질문>" --a .vdx-decisions/<topic>-a.html --b .vdx-decisions/<topic>-b.html
    ```
+   (The package declares a `vdx-decide` bin, but it only resolves through `npx` after the package is installed or linked. Inside this repo, invoke the file directly with `node`.)
    The CLI starts a tiny HTTP server on a free port, opens the user's browser to a side-by-side comparison, and waits for the user to click. It prints **only** `A` or `B` to stdout, then exits 0. On timeout (default 600s) it exits 1 with no stdout.
 3. Read the stdout result. Apply the chosen variant directly to the page being generated. Annotate with a comment: `<!-- decision: <topic> = <choice> via vdx-decide -->`.
 4. Continue the conversation acknowledging the chosen variant. Do not show the user the rejected variant unless they ask.
@@ -97,15 +98,27 @@ Options: `--theme <id>` (default `samsung-kr`), `--port <n>` (default auto), `--
 - **Spacing is on a 4px grid.** Use `--vdx-spacing-1` through `--vdx-spacing-24`. Don't invent intermediate values.
 - **Type sizes come from the type scale.** Use `--vdx-typography-font-size-{caption,bodyS..bodyL,h4..h1,displayM..displayXL}`. Don't introduce new sizes.
 
-## Reference files
+## Reference reading
 
-Read these as needed:
+The dedicated reference docs are not separately maintained — read the
+canonical sources directly:
 
-- `references/design-system.md` — How tokens are organized and how to read `theme.json`.
-- `references/component-library.md` — Catalog of every `.btn-*`, `.card`, `.product-card`, etc. with markup recipes.
-- `references/layout-patterns.md` — Page-level patterns: hero, feature grid, product wall, dense info section, footer.
-- `references/typography.md` — Type scale, weight choices, when to use display vs heading vs body.
-- `references/theme-extension.md` — How to add a new theme (e.g., `samsung-global`, `harman-luxury`).
+- **Design system / tokens** — `themes/<id>/theme.json` is the schema-validated
+  source of truth. The flattened CSS variables live in `themes/<id>/tokens.css`.
+- **Component catalog** — `themes/<id>/components.css` defines every `.btn-*`,
+  `.card`, `.product-card`, layout primitive, etc. Read it before composing —
+  it's the catalog.
+- **Layout patterns** — `themes/<id>/examples/*.html` show proven page-level
+  compositions (hero, feature grid, product wall, footer). The playgrounds
+  under `themes/<id>/playgrounds/*.html` show the same patterns with
+  interactive controls.
+- **Type scale** — the `typography.fontSize` group in `theme.json` lists every
+  size. Names follow `caption`, `body-s` … `body-l`, `h4` … `h1`, `display-m` …
+  `display-xl`.
+- **Adding a theme** — copy an existing `themes/<id>/` folder, edit
+  `theme.json`, run `node lib/token-to-css.js themes/<new-id>` to regenerate
+  `tokens.css`. The registry auto-discovers any directory containing a
+  schema-valid `theme.json`.
 
 ## Out of scope
 
