@@ -1,0 +1,56 @@
+<section data-vdx-theme="samsung-kr">
+  <link rel="stylesheet" href="../tokens.css">
+  <link rel="stylesheet" href="../components.css">
+
+  <header class="stack">
+    <p class="caption" data-bind="status_label">실행 대기 중</p>
+    <h1 class="display-m" data-bind="page_title">문서 분석 service</h1>
+    <p class="body-l text-muted" data-bind="page_subtitle">
+      업로드한 PDF에서 핵심 정보를 추출하고 결과를 검토합니다.
+    </p>
+  </header>
+
+  <div class="grid grid-2" style="margin-top: var(--vdx-spacing-12);">
+    <article class="card stack">
+      <h3>현재 상태</h3>
+      <div data-bind-html="status_panel">
+        <p class="text-muted">아직 처리한 문서가 없습니다.</p>
+      </div>
+      <p class="caption" data-bind="updated_at">—</p>
+    </article>
+
+    <form class="card stack">
+      <h3>새 문서 처리</h3>
+
+      <label class="label" for="doc-url">문서 URL</label>
+      <input class="input" id="doc-url" name="documentUrl" placeholder="https://...">
+
+      <label class="label" for="extraction-type">추출 유형</label>
+      <select class="input" id="extraction-type" name="extractionType">
+        <option value="summary">요약</option>
+        <option value="kie">핵심 항목 추출</option>
+        <option value="qa">질문 응답</option>
+      </select>
+
+      <div class="row" style="margin-top: var(--vdx-spacing-2);">
+        <button class="btn btn-primary" data-action="tool_call" data-tool="doc-svc.process">
+          처리 시작
+        </button>
+        <button class="btn btn-ghost" type="reset">초기화</button>
+      </div>
+
+      <p class="caption" data-bind="tool_feedback"></p>
+    </form>
+  </div>
+
+  <article class="card" style="margin-top: var(--vdx-spacing-8);">
+    <div class="flex justify-between items-center mb-4">
+      <h3 style="margin: 0;">최근 처리 결과</h3>
+      <span class="badge badge-info" data-bind="recent_count">0건</span>
+    </div>
+
+    <div data-bind-html="recent_rows">
+      <p class="text-muted">처리한 문서가 표시됩니다.</p>
+    </div>
+  </article>
+</section>
