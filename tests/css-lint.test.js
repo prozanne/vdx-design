@@ -4,8 +4,8 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { readFileSync, writeFileSync, readdirSync, existsSync } from "node:fs";
+import { resolve, join } from "node:path";
 
 const components = readFileSync(resolve("themes/samsung-kr/components.css"), "utf8");
 const tokens = readFileSync(resolve("themes/samsung-kr/tokens.css"), "utf8");
@@ -61,31 +61,6 @@ test("components.css contains no literal hex colors outside hardcoded fallbacks"
   );
 });
 
-test("components.css contains very few literal length values", () => {
-  // Some literals are unavoidable (1px borders, 36px swatches inside page-
-  // local styles, container max-widths during layout). We allow a small
-  // budget but flag growth so a future regression like "100px hero padding"
-  // gets caught.
-  //
-  // Match \d+px outside var() and outside @media expressions. Strip @media
-  // and url() and var() first.
-  let stripped = cssNoComments
-    .replace(/@media[^{]+\{/g, "")     // strip media query expressions
-    .replace(/var\([^)]*\)/g, "")       // strip var() refs
-    .replace(/url\([^)]*\)/g, "")       // strip url() refs
-    .replace(/-?\d+\s*\/\s*\d+/g, "");  // strip aspect-ratio fractions like 4 / 3
-
-  const matches = stripped.match(/-?\d+(?:\.\d+)?(?:px|rem|em)\b/g) || [];
-
-  // Budget: allow up to 25 literals (current count is ~20 — borders, sticky
-  // top:0, container max-widths, 2px focus rings, 1.25rem list padding). Bump
-  // this only with an explanation in the diff.
-  assert.ok(
-    matches.length <= 25,
-    `components.css uses ${matches.length} literal length values (budget 25): ${matches.slice(0, 30).join(", ")}`,
-  );
-});
-
 test("every var() reference in components.css resolves to a token", () => {
   // Already covered by samsung-theme.test.js but pinned here too so this file
   // is the single source of truth for "components.css is well-formed".
@@ -99,36 +74,73 @@ test("every var() reference in components.css resolves to a token", () => {
   assert.deepEqual(missing, [], `unresolved CSS variables: ${missing.join(", ")}`);
 });
 
-test("no token defined in tokens.css is silently unused by components.css OR examples", () => {
-  // A defined-but-never-used token is dead weight. Unused tokens are tolerable
-  // (a contributor may want them available for one-off page styles) but we
-  // surface them so the team has a chance to prune. Strict equality would be
-  // too aggressive; instead, document the unused set as a list so a future PR
-  // can review it intentionally.
-  const defined = [...tokens.matchAll(/(--vdx-[a-zA-Z0-9-]+):/g)].map(m => m[1]);
-  const examplesGlob = readFileSync(
-    resolve("themes/samsung-kr/examples/landing.html"), "utf8",
-  ) + readFileSync(
-    resolve("themes/samsung-kr/examples/product-detail.html"), "utf8",
-  ) + readFileSync(
-    resolve("themes/samsung-kr/examples/nav-footer.html"), "utf8",
-  ) + readFileSync(
-    resolve("themes/samsung-kr/examples/galaxy-s26.html"), "utf8",
+// ---- snapshot-pinned counts -------------------------------------------------
+//
+// The previous form ("≤25 lengths, ≤40 unused") was a SOFT budget: any
+// regression up to the cap landed silently. Replaced with EQUALITY against
+// tests/fixtures/css-lint-baseline.json, computed per theme. A change to
+// either count fails the test. Run with UPDATE_SNAPSHOTS=true to rewrite the
+// baseline (review the diff before committing).
+
+const BASELINE_PATH = resolve("tests/fixtures/css-lint-baseline.json");
+
+function countLiteralLengths(cssNoCommentsLocal) {
+  // Some literals are unavoidable (1px borders, 36px swatches, container
+  // max-widths). We pin EXACT count rather than a budget so any new literal
+  // is forced through review.
+  let stripped = cssNoCommentsLocal
+    .replace(/@media[^{]+\{/g, "")     // strip media query expressions
+    .replace(/var\([^)]*\)/g, "")       // strip var() refs
+    .replace(/url\([^)]*\)/g, "")       // strip url() refs
+    .replace(/-?\d+\s*\/\s*\d+/g, "");  // strip aspect-ratio fractions like 4 / 3
+  return (stripped.match(/-?\d+(?:\.\d+)?(?:px|rem|em)\b/g) || []).length;
+}
+
+function countUnusedTokens(themeDir) {
+  const tcss = readFileSync(resolve(themeDir, "tokens.css"), "utf8");
+  const ccss = stripComments(readFileSync(resolve(themeDir, "components.css"), "utf8"));
+  const defined = [...tcss.matchAll(/(--vdx-[a-zA-Z0-9-]+):/g)].map(m => m[1]);
+  const examplesDir = resolve(themeDir, "examples");
+  let examplesGlob = "";
+  if (existsSync(examplesDir)) {
+    for (const f of readdirSync(examplesDir)) {
+      if (f.endsWith(".html")) examplesGlob += readFileSync(join(examplesDir, f), "utf8");
+    }
+  }
+  const haystack = ccss + examplesGlob;
+  return defined.filter(name => !haystack.includes(name)).length;
+}
+
+function computeCountsForTheme(name) {
+  const dir = resolve("themes", name);
+  const ccss = stripComments(readFileSync(resolve(dir, "components.css"), "utf8"));
+  return {
+    lengths: countLiteralLengths(ccss),
+    unusedTokens: countUnusedTokens(dir),
+  };
+}
+
+const TRACKED_THEMES = ["samsung-kr", "samsung-bespoke"];
+
+test("css-lint counts match snapshot baseline (run with UPDATE_SNAPSHOTS=true to refresh)", () => {
+  const actual = Object.fromEntries(
+    TRACKED_THEMES.map(t => [t, computeCountsForTheme(t)]),
   );
-  const haystack = cssNoComments + examplesGlob;
 
-  const unused = defined.filter(name => !haystack.includes(name));
+  if (process.env.UPDATE_SNAPSHOTS === "true") {
+    writeFileSync(BASELINE_PATH, JSON.stringify(actual, null, 2) + "\n");
+    return; // intentional rewrite — no further assertion this run
+  }
 
-  // Soft budget: most theme tokens should be referenced somewhere. We allow
-  // up to 40 unused — the rationale is that the schema requires complete
-  // scales (every shadow step, every neutral step, every font weight, every
-  // breakpoint as a token) so contributors can reach for any rung when
-  // composing one-off page styles. Without this slack, the test would force
-  // components.css to consume the entire scale just to satisfy the linter.
-  // Bump only with an explanation.
   assert.ok(
-    unused.length <= 40,
-    `${unused.length} unused tokens (budget 40): ${unused.slice(0, 50).join(", ")}`,
+    existsSync(BASELINE_PATH),
+    `missing baseline: run \`UPDATE_SNAPSHOTS=true npm test\` to generate ${BASELINE_PATH}`,
+  );
+  const expected = JSON.parse(readFileSync(BASELINE_PATH, "utf8"));
+  assert.deepEqual(
+    actual,
+    expected,
+    "css-lint counts diverged from baseline — review the diff and run UPDATE_SNAPSHOTS=true if intentional",
   );
 });
 

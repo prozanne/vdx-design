@@ -16,6 +16,18 @@ function* allExamples() {
   }
 }
 
+// Yields [themeId, exampleAbsPath] pairs so tests can match an example back to
+// the theme whose tokens.css must satisfy its var() references.
+function* allExamplesByTheme() {
+  for (const id of listThemes()) {
+    const exDir = join(THEMES_DIR, id, "examples");
+    if (!existsSync(exDir) || !statSync(exDir).isDirectory()) continue;
+    for (const f of readdirSync(exDir)) {
+      if (f.endsWith(".html")) yield [id, join(exDir, f)];
+    }
+  }
+}
+
 test("at least one example HTML file exists across registered themes", () => {
   const examples = [...allExamples()];
   assert.ok(examples.length > 0, "no examples found");
@@ -97,4 +109,34 @@ test("example HTML contains no literal hex colors or px/rem/em sizes in <body> m
       `${ex}: inline styles use hardcoded values instead of tokens: ${violations.join(" | ")}`,
     );
   }
+});
+
+test("every var(--vdx-...) reference in example HTML resolves to a variable defined in that theme's tokens.css", () => {
+  // Catches drift between examples and tokens (e.g. an example referencing a
+  // swatch name from another theme). Without this, broken var() refs render as
+  // silent `initial` values in the browser.
+  const tokensByTheme = new Map();
+  for (const id of listThemes()) {
+    const tokensPath = join(THEMES_DIR, id, "tokens.css");
+    if (!existsSync(tokensPath)) continue;
+    const css = readFileSync(tokensPath, "utf8");
+    const defined = new Set(
+      [...css.matchAll(/(--vdx-[a-zA-Z0-9-]+)\s*:/g)].map(m => m[1]),
+    );
+    tokensByTheme.set(id, defined);
+  }
+
+  const failures = [];
+  for (const [themeId, ex] of allExamplesByTheme()) {
+    const defined = tokensByTheme.get(themeId);
+    if (!defined) continue;
+    const html = readFileSync(ex, "utf8");
+    const refs = [...html.matchAll(/var\((--vdx-[a-zA-Z0-9-]+)\)/g)].map(m => m[1]);
+    for (const ref of refs) {
+      if (!defined.has(ref)) {
+        failures.push(`${ex}: undefined var ${ref} (not in ${themeId}/tokens.css)`);
+      }
+    }
+  }
+  assert.deepEqual(failures, [], failures.join("\n"));
 });
